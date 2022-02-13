@@ -11,6 +11,8 @@ import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft-
 import {IShibui} from "./IShibui.sol";
 
 /// @title 🌊 Shibui 🌊
+/// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol)
+/// @author Modified from Alchemist (https://github.com/alchemistcoin/alchemist/blob/main/contracts/alchemist/Alchemist.sol)
 contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20Snapshot, ERC20Permit("Shibui"), IShibui {
 	/// @notice A record of each accounts delegate.
 	mapping(address => address) public delegates;
@@ -79,6 +81,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
                                 HOOK FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
+    /// @inheritdoc ERC20
 	function _beforeTokenTransfer(
 		address from,
 		address to,
