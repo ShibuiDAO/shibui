@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 pragma abicoder v2;
 
+/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/IShibui.sol)
 interface IShibui {
 	/*///////////////////////////////////////////////////////////////
                                     EVENTS

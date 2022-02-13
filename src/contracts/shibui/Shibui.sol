@@ -8,12 +8,18 @@ import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC2
 import {ERC20Snapshot} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol";
 import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+
 import {IShibui} from "./IShibui.sol";
 
 /// @title 🌊 Shibui 🌊
+/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/Shibui.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol)
 /// @author Modified from Alchemist (https://github.com/alchemistcoin/alchemist/blob/main/contracts/alchemist/Alchemist.sol)
 contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20Snapshot, ERC20Permit("Shibui"), IShibui {
+	/// @notice The EIP-712 typehash for the delegation struct used by the contract
+	bytes32 public constant _DELEGATION_TYPEHASH = keccak256("Delegation(address delegatee,uint256 nonce,uint256 expiry)");
+
 	/// @notice A record of each accounts delegate.
 	mapping(address => address) public delegates;
 
@@ -22,6 +28,44 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 
 	/// @notice The number of checkpoints for each account.
 	mapping(address => uint32) public numCheckpoints;
+
+	/*///////////////////////////////////////////////////////////////
+                          USER DELEGATION FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+	/// @notice Delegate votes from `msg.sender` to `delegatee`.
+	/// @param delegatee The address to delegate votes to.
+	function delegate(address delegatee) public {
+		return _delegate(msg.sender, delegatee);
+	}
+
+	/// @notice Delegates votes from signatory to `delegatee`.
+	/// @param delegatee The address to delegate votes to.
+	/// @param nonce The contract state required to match the signature.
+	/// @param expiry The time at which to expire the signature.
+	/// @param v The recovery byte of the signature.
+	/// @param r Half of the ECDSA signature pair.
+	/// @param s Half of the ECDSA signature pair.
+	function delegateBySig(
+		address delegatee,
+		uint256 nonce,
+		uint256 expiry,
+		uint8 v,
+		bytes32 r,
+		bytes32 s
+	) public {
+		bytes32 structHash = keccak256(abi.encode(_DELEGATION_TYPEHASH, delegatee, nonce, expiry));
+		bytes32 hash = _hashTypedDataV4(structHash);
+
+		address signer = ECDSA.recover(hash, v, r, s);
+
+		require(signer != address(0), "DELEGATE_SIG_INVALID_SIG");
+		require(nonce == _useNonce(signer), "DELEGATE_SIG_INVALID_NONCE");
+		// solhint-disable-next-line not-rely-on-time
+		require(block.timestamp <= expiry, "DELEGATE_SIG_EXPIRED");
+
+		return _delegate(signer, delegatee);
+	}
 
 	/*///////////////////////////////////////////////////////////////
                         INTERNAL DELEGATION FUNCTIONS
@@ -81,7 +125,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
                                 HOOK FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc ERC20
+	/// @inheritdoc ERC20
 	function _beforeTokenTransfer(
 		address from,
 		address to,
