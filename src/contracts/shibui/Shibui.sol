@@ -35,7 +35,8 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 
 	/// @notice Delegate votes from `msg.sender` to `delegatee`.
 	/// @param delegatee The address to delegate votes to.
-	function delegate(address delegatee) public {
+    /// @inheritdoc IShibui
+	function delegate(address delegatee) public override {
 		return _delegate(msg.sender, delegatee);
 	}
 
@@ -46,6 +47,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	/// @param v The recovery byte of the signature.
 	/// @param r Half of the ECDSA signature pair.
 	/// @param s Half of the ECDSA signature pair.
+    /// @inheritdoc IShibui
 	function delegateBySig(
 		address delegatee,
 		uint256 nonce,
@@ -53,7 +55,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 		uint8 v,
 		bytes32 r,
 		bytes32 s
-	) public {
+	) public override {
 		bytes32 structHash = keccak256(abi.encode(_DELEGATION_TYPEHASH, delegatee, nonce, expiry));
 		bytes32 hash = _hashTypedDataV4(structHash);
 
