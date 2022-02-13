@@ -7,6 +7,7 @@ import {EIP712} from "@openzeppelin/contracts/utils/cryptography/draft-EIP712.so
 import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import {ERC20Snapshot} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol";
 import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
@@ -16,7 +17,7 @@ import {IShibui} from "./IShibui.sol";
 /// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/Shibui.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol)
 /// @author Modified from Alchemist (https://github.com/alchemistcoin/alchemist/blob/main/contracts/alchemist/Alchemist.sol)
-contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20Snapshot, ERC20Permit("Shibui"), IShibui {
+contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20Snapshot, ERC20Permit("Shibui"), Ownable, IShibui {
 	/// @notice The EIP-712 typehash for the delegation struct used by the contract
 	bytes32 public constant _DELEGATION_TYPEHASH = keccak256("Delegation(address delegatee,uint256 nonce,uint256 expiry)");
 
@@ -28,6 +29,22 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 
 	/// @notice The number of checkpoints for each account.
 	mapping(address => uint32) public numCheckpoints;
+
+	/*///////////////////////////////////////////////////////////////
+                              HOLDER LOCKING
+    //////////////////////////////////////////////////////////////*/
+
+	/// @notice Users who cannot transfer tokens.
+	mapping(address => bool) public lockedHolders;
+
+	/*///////////////////////////////////////////////////////////////
+                               INITIALIZATION
+    //////////////////////////////////////////////////////////////*/
+
+	constructor(address recipient) {
+		// mint initial supply
+		ERC20._mint(recipient, 50000000e18); // 50 million
+	}
 
 	/*///////////////////////////////////////////////////////////////
                           USER DELEGATION FUNCTIONS
@@ -177,6 +194,29 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	}
 
 	/*///////////////////////////////////////////////////////////////
+                           HOLDER LOCKING FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+	/// @notice Checks if `_holder` is barred from transferring tokens.
+	/// @param _holder The target holder address.
+	/// @return Whether `_holder` is barred from transferring tokens.
+	function isLocked(address _holder) public view virtual returns (bool) {
+		return lockedHolders[_holder];
+	}
+
+	/// @notice Bars `_holder` from transferring tokens.
+	/// @param _holder The target holder address.
+	function lockHolder(address _holder) public onlyOwner {
+		lockedHolders[_holder] = true;
+	}
+
+	/// @notice Unbars `_holder` from transferring tokens.
+	/// @param _holder The target holder address.
+	function unlockHolder(address _holder) public onlyOwner {
+		lockedHolders[_holder] = false;
+	}
+
+	/*///////////////////////////////////////////////////////////////
                                 HOOK FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
@@ -186,6 +226,8 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 		address to,
 		uint256 amount
 	) internal override(ERC20, ERC20Snapshot) {
+		require(!isLocked(from), "HOLDER_LOCKED_FROM_TRANSFER");
+
 		ERC20Snapshot._beforeTokenTransfer(from, to, amount);
 		_moveDelegates(delegates[from], delegates[to], amount);
 	}
