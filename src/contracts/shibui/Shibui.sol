@@ -41,9 +41,10 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
                                INITIALIZATION
     //////////////////////////////////////////////////////////////*/
 
-	constructor(address recipient) {
+    /// @param _recipient The account getting minted the whole initial token supply to distribute.
+	constructor(address _recipient) {
 		// mint initial supply
-		ERC20._mint(recipient, 50000000e18); // 50 million
+		ERC20._mint(_recipient, 50000000e18); // 50 million
 	}
 
 	/*///////////////////////////////////////////////////////////////
@@ -204,15 +205,19 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 		return lockedHolders[_holder];
 	}
 
-	/// @notice Bars `_holder` from transferring tokens.
+	/// @notice Locks `_holder` from transferring tokens.
 	/// @param _holder The target holder address.
 	function lockHolder(address _holder) public onlyOwner {
+		emit HolderLocked(_holder, _msgSender());
+
 		lockedHolders[_holder] = true;
 	}
 
-	/// @notice Unbars `_holder` from transferring tokens.
+	/// @notice Unlocks `_holder` from transferring tokens.
 	/// @param _holder The target holder address.
 	function unlockHolder(address _holder) public onlyOwner {
+		emit HolderUnlocked(_holder, _msgSender());
+
 		lockedHolders[_holder] = false;
 	}
 
@@ -236,6 +241,10 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
                         MATH "POLYFILL" FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
+	/// @notice Makes sure that the passed unsigned integer fits within 32 bits.
+	/// @param n The unsigned integer to check.
+	/// @param errorMessage The error with which to revert if `n` is an unsigned integer with a value over 32 bits.
+	/// @return `n` as a unsigned integer limited to 32 bits.
 	function safe32(uint256 n, string memory errorMessage) internal pure returns (uint32) {
 		require(n < 2**32, errorMessage);
 		return uint32(n);

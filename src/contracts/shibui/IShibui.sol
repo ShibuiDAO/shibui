@@ -5,6 +5,8 @@ pragma abicoder v2;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
 
+/// @title "🌊 Shibui 🌊" public interface
+/// @notice Inteface describing the functions, events, and structs for the "Shibui" (🌊) governance token.
 /// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/IShibui.sol)
 interface IShibui is IERC20, IERC20Permit {
 	/*///////////////////////////////////////////////////////////////
@@ -12,16 +14,34 @@ interface IShibui is IERC20, IERC20Permit {
     //////////////////////////////////////////////////////////////*/
 
 	/// @notice An event thats emitted when an account changes its delegate.
+	/// @param delegator The account that is delegating their votes.
+	/// @param fromDelegate The account that served as the previous delegate.
+	/// @param toDelegate The account serving as the new delegate.
 	event DelegateChanged(address indexed delegator, address indexed fromDelegate, address indexed toDelegate);
 
 	/// @notice An event thats emitted when a delegate account's vote balance changes.
+	/// @param delegate The account of which the vote balance changed.
+	/// @param previousBalance The delegates previously delegated balance.
+	/// @param newBalance The delegates new balance.
 	event DelegateVotesChanged(address indexed delegate, uint256 previousBalance, uint256 newBalance);
+
+	/// @notice An event thats emitted when a holder/account gets locked from transferring their tokens.
+	/// @param account The account being prevented from transferring, staking, selling, etc... their token.
+	/// @param executor Account responsible for this action.
+	event HolderLocked(address indexed account, address indexed executor);
+
+	/// @notice An event thats emitted when a holder/account gets unlocked from transferring their tokens.
+	/// @param account The account being removed from the lockedHolders mapping.
+	/// @param executor Account responsible for this action.
+	event HolderUnlocked(address indexed account, address indexed executor);
 
 	/*///////////////////////////////////////////////////////////////
                             VOTE CHECKPOINTING
     //////////////////////////////////////////////////////////////*/
 
 	/// @notice A checkpoint for marking number of votes from a given block.
+	/// @param fromBlock The block from which the Checkpoint is.
+	/// @param votes Number of votes present in checkpoint.
 	struct Checkpoint {
 		uint32 fromBlock;
 		uint256 votes;
