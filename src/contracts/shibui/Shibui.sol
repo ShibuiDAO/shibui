@@ -170,7 +170,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 			if (dstRep != address(0)) {
 				uint32 dstRepNum = numCheckpoints[dstRep];
 				uint256 dstRepOld = dstRepNum > 0 ? checkpoints[dstRep][dstRepNum - 1].votes : 0;
-				uint256 dstRepNew = dstRepOld - amount;
+				uint256 dstRepNew = dstRepOld + amount;
 				_writeCheckpoint(dstRep, dstRepNum, dstRepOld, dstRepNew);
 			}
 		}
