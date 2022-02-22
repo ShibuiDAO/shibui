@@ -19,8 +19,16 @@ import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol)
 /// @author Modified from Alchemist (https://github.com/alchemistcoin/alchemist/blob/main/contracts/alchemist/Alchemist.sol)
 contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20Snapshot, ERC20Permit("Shibui"), Ownable, IShibui {
+	//////////////////////////////////////////////////////////////////////////////////////
+	///                                EIP712 CONSTANTS                                ///
+	//////////////////////////////////////////////////////////////////////////////////////
+
 	/// @notice The EIP-712 typehash for the delegation struct used by the contract
 	bytes32 public constant _DELEGATION_TYPEHASH = keccak256("Delegation(address delegatee,uint256 nonce,uint256 expiry)");
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                                    GOVERNANCE RELATED STORAGE                                                    ///
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/// @notice A record of each accounts delegate.
 	mapping(address => address) public delegates;
@@ -31,26 +39,40 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	/// @notice The number of checkpoints for each account.
 	mapping(address => uint32) public numCheckpoints;
 
-	/*///////////////////////////////////////////////////////////////
-                              HOLDER LOCKING
-    //////////////////////////////////////////////////////////////*/
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                            HOLDER LOCKING STORAGE                                            ///
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/// @notice Users who cannot transfer tokens.
 	mapping(address => bool) public lockedHolders;
 
-	/*///////////////////////////////////////////////////////////////
-                               INITIALIZATION
-    //////////////////////////////////////////////////////////////*/
+	////////////////////////////////////
+	///            EVENTS            ///
+	////////////////////////////////////
 
-    /// @param _recipient The account getting minted the whole initial token supply to distribute.
+	/// @notice An event thats emitted when a holder/account gets locked from transferring their tokens.
+	/// @param account The account being prevented from transferring, staking, selling, etc... their token.
+	/// @param executor Account responsible for this action.
+	event HolderLocked(address indexed account, address indexed executor);
+
+	/// @notice An event thats emitted when a holder/account gets unlocked from transferring their tokens.
+	/// @param account The account being removed from the lockedHolders mapping.
+	/// @param executor Account responsible for this action.
+	event HolderUnlocked(address indexed account, address indexed executor);
+
+	////////////////////////////////////////////////////////////////////////////
+	///                            INITIALIZATION                            ///
+	////////////////////////////////////////////////////////////////////////////
+
+	/// @param _recipient The account getting minted the whole initial token supply to distribute.
 	constructor(address _recipient) {
 		// mint initial supply
-		ERC20._mint(_recipient, 50000000e18); // 50 million
+		ERC20._mint(_recipient, 50_000_000e18); // 50 million
 	}
 
-	/*///////////////////////////////////////////////////////////////
-                          USER DELEGATION FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                                  USER DELEGATION FUNCTIONS                                                  ///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/// @notice Delegate votes from `msg.sender` to `delegatee`.
 	/// @param delegatee The address to delegate votes to.
@@ -88,9 +110,9 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 		return _delegate(signer, delegatee);
 	}
 
-	/*///////////////////////////////////////////////////////////////
-                            VOTE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+	////////////////////////////////////////////////////////////////////////////
+	///                            VOTE FUNCTIONS                            ///
+	////////////////////////////////////////////////////////////////////////////
 
 	/// @notice Gets the current votes balance for `account`.
 	/// @param account The address to get votes balance.
@@ -141,9 +163,9 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 		return checkpoints[account][lower].votes;
 	}
 
-	/*///////////////////////////////////////////////////////////////
-                        INTERNAL DELEGATION FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                                          INTERNAL DELEGATION FUNCTIONS                                                          ///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	function _delegate(address delegator, address delegatee) internal {
 		address currentDelegate = delegates[delegator];
@@ -195,9 +217,9 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 		emit DelegateVotesChanged(delegatee, oldVotes, newVotes);
 	}
 
-	/*///////////////////////////////////////////////////////////////
-                           HOLDER LOCKING FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                                HOLDER LOCKING FUNCTIONS                                                ///
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/// @notice Checks if `_holder` is barred from transferring tokens.
 	/// @param _holder The target holder address.
@@ -222,9 +244,9 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 		lockedHolders[_holder] = false;
 	}
 
-	/*///////////////////////////////////////////////////////////////
-                                HOOK FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+	////////////////////////////////////////////////////////////////////////////
+	///                            HOOK FUNCTIONS                            ///
+	////////////////////////////////////////////////////////////////////////////
 
 	/// @inheritdoc ERC20
 	function _beforeTokenTransfer(

@@ -5,6 +5,7 @@ import 'hardhat-abi-exporter';
 import 'hardhat-gas-reporter';
 import { HardhatUserConfig, task } from 'hardhat/config';
 import 'solidity-coverage';
+import { coinMarketCapApi } from './config.hardhat';
 import { networks } from './networks.hardhat';
 
 task('accounts', 'Prints the list of accounts', async (_, hre) => {
@@ -42,6 +43,13 @@ const config: HardhatUserConfig = {
 		outDir: 'typechain',
 		target: 'ethers-v5',
 		alwaysGenerateOverloads: false
+	},
+	gasReporter: {
+		excludeContracts: ['contracts/mocks/', 'src/contracts/mocks/', 'test/', 'src/test/'],
+		showTimeSpent: true,
+		currency: 'USD',
+		gasPrice: 1,
+		coinmarketcap: coinMarketCapApi
 	}
 };
 

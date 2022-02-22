@@ -9,9 +9,9 @@ import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft
 /// @notice Inteface describing the functions, events, and structs for the "Shibui" (🌊) governance token.
 /// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/IShibui.sol)
 interface IShibui is IERC20, IERC20Permit {
-	/*///////////////////////////////////////////////////////////////
-                                    EVENTS
-    //////////////////////////////////////////////////////////////*/
+	////////////////////////////////////
+	///            EVENTS            ///
+	////////////////////////////////////
 
 	/// @notice An event thats emitted when an account changes its delegate.
 	/// @param delegator The account that is delegating their votes.
@@ -25,19 +25,9 @@ interface IShibui is IERC20, IERC20Permit {
 	/// @param newBalance The delegates new balance.
 	event DelegateVotesChanged(address indexed delegate, uint256 previousBalance, uint256 newBalance);
 
-	/// @notice An event thats emitted when a holder/account gets locked from transferring their tokens.
-	/// @param account The account being prevented from transferring, staking, selling, etc... their token.
-	/// @param executor Account responsible for this action.
-	event HolderLocked(address indexed account, address indexed executor);
-
-	/// @notice An event thats emitted when a holder/account gets unlocked from transferring their tokens.
-	/// @param account The account being removed from the lockedHolders mapping.
-	/// @param executor Account responsible for this action.
-	event HolderUnlocked(address indexed account, address indexed executor);
-
-	/*///////////////////////////////////////////////////////////////
-                            VOTE CHECKPOINTING
-    //////////////////////////////////////////////////////////////*/
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                    VOTE CHECKPOINTING                                    ///
+	////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/// @notice A checkpoint for marking number of votes from a given block.
 	/// @param fromBlock The block from which the Checkpoint is.
@@ -47,9 +37,9 @@ interface IShibui is IERC20, IERC20Permit {
 		uint96 votes;
 	}
 
-	/*///////////////////////////////////////////////////////////////
-                          USER DELEGATION FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                                  USER DELEGATION FUNCTIONS                                                  ///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/// @notice Delegate votes from `msg.sender` to `delegatee`.
 	/// @param delegatee The address to delegate votes to.
@@ -71,9 +61,9 @@ interface IShibui is IERC20, IERC20Permit {
 		bytes32 s
 	) external;
 
-	/*///////////////////////////////////////////////////////////////
-                            VOTE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+	////////////////////////////////////////////////////////////////////////////
+	///                            VOTE FUNCTIONS                            ///
+	////////////////////////////////////////////////////////////////////////////
 
 	/// @notice Gets the current votes balance for `account`.
 	/// @param account The address to get votes balance.
