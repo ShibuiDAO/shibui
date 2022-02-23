@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 pragma abicoder v2;
 
+// Base contracts
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {EIP712} from "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
@@ -9,12 +10,15 @@ import {ERC20Snapshot} from "@openzeppelin/contracts/token/ERC20/extensions/ERC2
 import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
+// Interfaces
 import {IShibui} from "./IShibui.sol";
 
+// Structures, libraries, utilities
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 /// @title 🌊 Shibui 🌊
+/// @notice The ShibuiDAO governance and treasury token.
 /// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/Shibui.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/Comp.sol)
 /// @author Modified from Alchemist (https://github.com/alchemistcoin/alchemist/blob/main/contracts/alchemist/Alchemist.sol)
@@ -43,7 +47,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	///                                            HOLDER LOCKING STORAGE                                            ///
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	/// @notice Users who cannot transfer tokens.
+	/// @notice Address' who cannot transfer tokens.
 	mapping(address => bool) public lockedHolders;
 
 	////////////////////////////////////
