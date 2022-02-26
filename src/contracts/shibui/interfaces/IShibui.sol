@@ -8,7 +8,7 @@ import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft
 
 /// @title "🌊 Shibui 🌊" public interface
 /// @notice Inteface describing the functions, events, and structs for the "Shibui" (🌊) governance token.
-/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/IShibui.sol)
+/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/interfaces/IShibui.sol)
 interface IShibui is IERC20, IERC20Permit {
 	////////////////////////////////////
 	///            EVENTS            ///

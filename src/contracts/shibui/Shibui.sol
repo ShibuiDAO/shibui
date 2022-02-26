@@ -11,7 +11,7 @@ import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft-
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 // Interfaces
-import {IShibui} from "./IShibui.sol";
+import {IShibui} from "./interfaces/IShibui.sol";
 
 // Structures, libraries, utilities
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
