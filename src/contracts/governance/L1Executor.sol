@@ -13,18 +13,22 @@ contract L1Executor {
 	///                  CONSTANTS                  ///
 	///////////////////////////////////////////////////
 
-    /// @dev Interface representing the L2->L1 CDM.
+	/// @dev Interface representing the L2->L1 CDM.
 	ICrossDomainMessenger private immutable cdm;
 
-    /// @notice Address of the L2 DAO executor (Governor/Timelock).
-	address public immutable l2DAO;
+	/////////////////////
+	///      DAO      ///
+	/////////////////////
+
+	/// @notice Address of the L2 DAO executor (Governor/Timelock).
+	address public l2DAO;
 
 	////////////////////////////////////////////////////////////////////////////
 	///                            INITIALIZATION                            ///
 	////////////////////////////////////////////////////////////////////////////
 
-    /// @param _cdm Address of the L2->L1 CDM.
-    /// @param _l2DAO Address of the L2 DAO executor (Governor/Timelock).
+	/// @param _cdm Address of the L2->L1 CDM.
+	/// @param _l2DAO Address of the L2 DAO executor (Governor/Timelock).
 	constructor(address _cdm, address _l2DAO) {
 		cdm = ICrossDomainMessenger(_cdm);
 		l2DAO = _l2DAO;
@@ -45,10 +49,20 @@ contract L1Executor {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/// @notice Proxies an execution payload bridged from Layer 2.
-    /// @dev Verfies the execution payload source is the configured Layer 2 Governance.
+	/// @dev Verfies the execution payload source is the configured Layer 2 Governance.
 	function execute(address target, bytes calldata data) public onlyL2DAO {
 		// solhint-disable-next-line avoid-low-level-calls
 		(bool success, ) = target.call(data);
 		require(success, "UNDERLYING_CONTRACT_REVERTED");
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                        DAO UPDATE FUNCTIONS                                        ///
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/// @notice Allows the L2 DAO to update it's own address in the event of a Timelock switch.
+	/// @param _newL2DAO The address of the new acting L2 DAO.
+	function setL2DAO(address _newL2DAO) public onlyL2DAO {
+		l2DAO = _newL2DAO;
 	}
 }
