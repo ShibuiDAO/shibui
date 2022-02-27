@@ -27,7 +27,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	///                                EIP712 CONSTANTS                                ///
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	/// @notice The EIP-712 typehash for the delegation struct used by the contract
+	/// @notice The EIP-712 typehash for the delegation struct used by the contract.
 	bytes32 public constant _DELEGATION_TYPEHASH = keccak256("Delegation(address delegatee,uint256 nonce,uint256 expiry)");
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

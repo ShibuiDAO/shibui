@@ -4,6 +4,6 @@
 		"allowJs": true,
 		"checkJs": true
 	},
-	"include": ["test/"],
+	"include": ["test/", "scripts/"],
 	"files": ["./config.hardhat.ts", "./hardhat.config.ts", "./networks.hardhat.ts"]
 }

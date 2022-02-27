@@ -3,6 +3,8 @@ pragma solidity ^0.8.9;
 pragma abicoder v2;
 
 // Base contracts
+import {ERC721Holder} from "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import {ERC1155Holder} from "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 // Interfaces
@@ -11,7 +13,7 @@ import {ITimelock} from "./interfaces/ITimelock.sol";
 /// @title Timelock
 /// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/Timelock.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Timelock.sol)
-contract Timelock is Ownable, ITimelock {
+contract Timelock is ERC721Holder, ERC1155Holder, Ownable, ITimelock {
 	///////////////////////////////////////////////////
 	///                  CONSTANTS                  ///
 	///////////////////////////////////////////////////
@@ -25,6 +27,8 @@ contract Timelock is Ownable, ITimelock {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	uint256 public delay;
+
+	address public proposedOwner;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	///                                      TRANSACTION STORAGE                                      ///
@@ -50,6 +54,20 @@ contract Timelock is Ownable, ITimelock {
 		delay = _delay;
 	}
 
+	///////////////////////////////////////////////////
+	///                  MODIFIERS                  ///
+	///////////////////////////////////////////////////
+
+	modifier onlyAdministrative() {
+		require(owner() == _msgSender() || address(this) == _msgSender(), "CALLER_NOT_PERMITTED");
+		_;
+	}
+
+	modifier onlyProposedOwner() {
+		require(proposedOwner == _msgSender(), "CALLER_NOT_PROPOSED");
+		_;
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///                                                TIMELOCK ADMIN FUNCTIONS                                                ///
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +80,17 @@ contract Timelock is Ownable, ITimelock {
 		emit NewDelay(delay);
 	}
 
+	function proposeOwner(address _newOwner) external override onlyAdministrative {
+		proposedOwner = _newOwner;
+
+		emit OwnerProposed(_newOwner, owner());
+	}
+
+	function proposedOwnerAccept() external override onlyProposedOwner {
+		_transferOwnership(proposedOwner);
+		proposedOwner = address(0);
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///                                          TRANSACTION FUNCTIONS                                          ///
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +101,7 @@ contract Timelock is Ownable, ITimelock {
 		string calldata signature,
 		bytes calldata data,
 		uint256 eta
-	) public override onlyOwner returns (bytes32) {
+	) public override onlyAdministrative returns (bytes32) {
 		require(eta >= getBlockTimestamp() + delay, "TRANSACTION_LOW_DELAY");
 
 		bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
@@ -88,7 +117,7 @@ contract Timelock is Ownable, ITimelock {
 		string calldata signature,
 		bytes calldata data,
 		uint256 eta
-	) public override onlyOwner {
+	) public override onlyAdministrative {
 		bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
 		queuedTransactions[txHash] = false;
 
@@ -101,7 +130,7 @@ contract Timelock is Ownable, ITimelock {
 		string calldata signature,
 		bytes calldata data,
 		uint256 eta
-	) public payable override onlyOwner returns (bytes memory) {
+	) public payable override onlyAdministrative returns (bytes memory) {
 		bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
 		require(queuedTransactions[txHash], "TRANSACTION_NOT_QUEUED");
 		require(getBlockTimestamp() >= eta, "TRANSACTION_TOO_YOUNG");
@@ -124,6 +153,15 @@ contract Timelock is Ownable, ITimelock {
 		emit ExecuteTransaction(txHash, target, value, signature, data, eta);
 
 		return returnData;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                                    OVERRIDE DISABLE FUNCTIONS                                                    ///
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	function transferOwnership(address newOwner) public pure override(Ownable) {
+		newOwner;
+		revert("TERMINATED");
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////

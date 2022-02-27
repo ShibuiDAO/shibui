@@ -1,5 +1,6 @@
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-waffle';
+import '@openzeppelin/hardhat-upgrades';
 import '@typechain/hardhat';
 import 'hardhat-abi-exporter';
 import 'hardhat-gas-reporter';
@@ -37,7 +38,7 @@ const config: HardhatUserConfig = {
 		runOnCompile: true,
 		clear: true,
 		flat: true,
-		only: ['Shibui.sol']
+		only: ['Shibui.sol', 'TokenManager.sol', 'Timelock.sol', 'L1Executor.sol', 'GovernorCharlie.sol']
 	},
 	typechain: {
 		outDir: 'typechain',

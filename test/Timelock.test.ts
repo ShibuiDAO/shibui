@@ -21,9 +21,13 @@ describe('Timelock', () => {
 		it('should swap ownership', async () => {
 			const [deployer, , a0] = await ethers.getSigners();
 
-			await expect(timelock.transferOwnership(a0.address)) //
+			await expect(timelock.proposeOwner(a0.address)) //
+				.to.emit(timelock, 'OwnerProposed')
+				.withArgs(a0.address, deployer.address);
+			await expect(timelock.connect(a0).proposedOwnerAccept()) //
 				.to.emit(timelock, 'OwnershipTransferred')
 				.withArgs(deployer.address, a0.address);
+
 			const owner = await timelock.owner();
 
 			expect(owner).to.equal(a0.address);
@@ -32,7 +36,8 @@ describe('Timelock', () => {
 		it('should fail to swap ownership', async () => {
 			const [, , a0] = await ethers.getSigners();
 
-			await expect(timelock.connect(a0).transferOwnership(a0.address)).to.be.revertedWith('Ownable: caller is not the owner');
+			await expect(timelock.connect(a0).transferOwnership(a0.address)).to.be.revertedWith('TERMINATED');
+			await expect(timelock.connect(a0).proposeOwner(a0.address)).to.be.revertedWith('CALLER_NOT_PERMITTED');
 		});
 
 		it('should renounce ownership', async () => {
@@ -44,7 +49,7 @@ describe('Timelock', () => {
 			const owner = await timelock.owner();
 
 			expect(owner).to.equal(ZERO_ADDRESS);
-			await expect(timelock.transferOwnership(a0.address)).to.be.revertedWith('Ownable: caller is not the owner');
+			await expect(timelock.proposeOwner(a0.address)).to.be.revertedWith('CALLER_NOT_PERMITTED');
 		});
 	});
 });
