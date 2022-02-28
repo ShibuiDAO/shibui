@@ -5,8 +5,48 @@ pragma abicoder v2;
 /// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/interfaces/IGovernorCharlie.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorBravoInterfaces.sol)
 interface IGovernorCharlie {
-	event AllowlistAccountExpirationSet(address indexed account, uint256 indexed expiration);
-	event AllowlistGuardianSet(address indexed oldGuardian, address indexed newGuardian);
+	/// @notice An event emitted when the voting period is set.
+	event VotingPeriodSet(uint256 oldVotingPeriod, uint256 newVotingPeriod);
+
+	/// @notice An event emitted when the voting delay is set.
+	event VotingDelaySet(uint256 oldVotingDelay, uint256 newVotingDelay);
+
+	/// @notice Emitted when proposal threshold is set.
+	event ProposalThresholdSet(uint256 oldProposalThreshold, uint256 newProposalThreshold);
+
+	/// @notice An event emitted when a new proposal is created.
+	event ProposalCreated(
+		uint256 id,
+		address proposer,
+		address[] targets,
+		uint256[] values,
+		string[] signatures,
+		bytes[] calldatas,
+        uint256 timestamp,
+		uint256 startBlock,
+		uint256 endTimestamp,
+		string description
+	);
+
+	/// @notice An event emitted when a proposal has been canceled.
+	event ProposalCanceled(uint256 id);
+
+	/// @notice An event emitted when a vote has been cast on a proposal.
+	/// @param voter The address which casted a vote.
+	/// @param proposalId The proposal id which was voted on.
+	/// @param support Support value for the vote. 0=against, 1=for, 2=abstain.
+	/// @param votes Number of votes which were cast by the voter.
+	/// @param reason The reason given for the vote by the voter.
+	event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 votes, string reason);
+
+	/// @notice An event emitted when a proposal has been queued in the Timelock.
+	event ProposalQueued(uint256 id, uint256 eta);
+
+	/// @notice An event emitted when a proposal has been executed in the Timelock.
+	event ProposalExecuted(uint256 id);
+
+	event AllowlistAccountExpirationSet(address account, uint256 expiration);
+	event AllowlistGuardianSet(address oldGuardian, address newGuardian);
 
 	/// @notice Ballot receipt record for a voter.
 	struct Receipt {
@@ -33,9 +73,12 @@ interface IGovernorCharlie {
 		string[] signatures;
 		/// @notice The ordered list of calldata to be passed to each call.
 		bytes[] calldatas;
+        /// @notice Timestamp of when the proposal was created.
+        uint256 timestamp;
 		/// @notice The block at which voting begins: holders must delegate their votes prior to this block.
 		uint256 startBlock;
 		/// @notice The block at which voting ends: votes must be cast prior to this block.
+        /// @dev Is counted from `timestamp` and not `startBlock` so the proposer should take that into account.
 		uint256 endTimestamp;
 		/// @notice Current number of votes in favor of this proposal.
 		uint256 forVotes;
