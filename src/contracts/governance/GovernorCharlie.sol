@@ -31,7 +31,7 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 
 	bytes32 public constant _BALLOT_TYPEHASH = keccak256("Ballot(uint256 proposalId,uint8 support)");
 
-	bytes32 public constant _BALLOT_REASON_TYPEHASH = keccak256("Ballot(uint256 proposalId,uint8 support,string calldata reason)");
+	bytes32 public constant _BALLOT_REASON_TYPEHASH = keccak256("Ballot(uint256 proposalId,uint8 support,string reason)");
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///                                  CONTRACT METADATA                                  ///

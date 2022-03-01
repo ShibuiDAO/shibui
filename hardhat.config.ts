@@ -38,7 +38,7 @@ const config: HardhatUserConfig = {
 		runOnCompile: true,
 		clear: true,
 		flat: true,
-		only: ['Shibui.sol', 'TokenManager.sol', 'Timelock.sol', 'L1Executor.sol', 'GovernorCharlie.sol']
+		only: ['Shibui.sol', 'TokenManager.sol', 'Timelock.sol', 'L1Executor.sol', 'GovernorCharlie.sol', 'VestingShibui.sol']
 	},
 	typechain: {
 		outDir: 'typechain',
