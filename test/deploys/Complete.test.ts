@@ -13,7 +13,8 @@ import type {
 
 chai.use(solidity);
 
-// const ZERO.address = '0x0000000000000000000000000000000000000000';
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
 const NOW = new Date();
 const DECIMALS = BigNumber.from(10).pow(18);
 
@@ -111,7 +112,49 @@ describe('Deploy - Complete', () => {
 		expect(await Shibui.getCurrentVotes(C1.address)).to.eql(C_DISTRIBUTION);
 		expect(await Shibui.getCurrentVotes(A1.address)).to.eql(A_DISTRIBUTION);
 		expect(await Shibui.getCurrentVotes(A2.address)).to.eql(A_DISTRIBUTION);
+
+		await expect(F1_VestingShibui.release()).to.revertedWith('TIME_BEFORE_RELEASE');
+		await expect(C1_VestingShibui.release()).to.revertedWith('TIME_BEFORE_RELEASE');
+		await expect(A1_VestingShibui.release()).to.revertedWith('TIME_BEFORE_RELEASE');
+		await expect(A2_VestingShibui.release()).to.revertedWith('TIME_BEFORE_RELEASE');
+
+		await network.provider.send('evm_increaseTime', [VEST_END_TIMESTAMP.toNumber()]);
+
+		await F1_VestingShibui.release();
+		await C1_VestingShibui.release();
+		await A1_VestingShibui.release();
+		await A2_VestingShibui.release();
+
+		expect(await Shibui.balanceOf(F1_VestingShibui.address)).to.eql(BigNumber.from(0));
+		expect(await Shibui.balanceOf(C1_VestingShibui.address)).to.eql(BigNumber.from(0));
+		expect(await Shibui.balanceOf(A1_VestingShibui.address)).to.eql(BigNumber.from(0));
+		expect(await Shibui.balanceOf(A2_VestingShibui.address)).to.eql(BigNumber.from(0));
+
+		expect(await Shibui.getCurrentVotes(F1.address)).to.eql(BigNumber.from(0));
+		expect(await Shibui.balanceOf(F1.address)).to.eql(F_DISTRIBUTION);
+		expect(await Shibui.getCurrentVotes(C1.address)).to.eql(BigNumber.from(0));
+		expect(await Shibui.balanceOf(C1.address)).to.eql(C_DISTRIBUTION);
+		expect(await Shibui.getCurrentVotes(A1.address)).to.eql(BigNumber.from(0));
+		expect(await Shibui.balanceOf(A1.address)).to.eql(A_DISTRIBUTION);
+		expect(await Shibui.getCurrentVotes(A2.address)).to.eql(BigNumber.from(0));
+		expect(await Shibui.balanceOf(A2.address)).to.eql(A_DISTRIBUTION);
+
+		await expect(F1_VestingShibui.release()).to.revertedWith('BALANCE_EMPTY');
+		await expect(C1_VestingShibui.release()).to.revertedWith('BALANCE_EMPTY');
+		await expect(A1_VestingShibui.release()).to.revertedWith('BALANCE_EMPTY');
+		await expect(A2_VestingShibui.release()).to.revertedWith('BALANCE_EMPTY');
+
+		expect(await Shibui.balanceOf(TokenManager.address)).to.eql(TREASURY_DISTRIBUTION);
+		expect(await Shibui.getCurrentVotes(TokenManager.address)).to.eql(BigNumber.from(0));
+
 		// Votes are not present if not delegated. For a user to have votes they have to delegate them to themselves.
 		expect(await Shibui.getCurrentVotes(BOBA_DAO.address)).to.eql(BigNumber.from(0));
+
+		await expect(Shibui.connect(BOBA_DAO).delegate(BOBA_DAO.address))
+			.to.emit(Shibui, 'DelegateChanged')
+			.withArgs(BOBA_DAO.address, ZERO_ADDRESS, BOBA_DAO.address);
+		expect(await Shibui.getCurrentVotes(BOBA_DAO.address)).to.eql(BOBA_DAO_DISTRIBUTION);
+
+		await expect(Shibui.connect(BOBA_DAO).transfer(deployer.address, 1)).to.revertedWith('HOLDER_LOCKED_FROM_TRANSFER');
 	});
 });
