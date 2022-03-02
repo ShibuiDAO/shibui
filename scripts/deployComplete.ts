@@ -17,7 +17,7 @@ const F1_ADDRESS = '0xf82d0ea7A2eDde6d30cAf8A1E6Fed09f726fD584';
 const C1_ADDRESS = '0x147439cBFb58fbb13a3149BCd9159d21fbD9F799';
 const A1_ADDRESS = '';
 const A2_ADDRESS = '';
-const BOBA_DAO_ADDRESS = '';
+const BOBA_DAO_ADDRESS = '0x2CC555B5B1a4Cf7fA5401B29ab46fc5ba2e205b0';
 
 const DECIMALS = BigNumber.from(10).pow(18);
 
