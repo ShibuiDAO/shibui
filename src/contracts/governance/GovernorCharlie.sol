@@ -62,8 +62,8 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 	uint256 public constant MIN_PROPOSAL_THRESHOLD = 250_000e18;
 
 	/// @notice The maximum setable proposal threshold.
-	/// @dev 500,000 Shibui;
-	uint256 public constant MAX_PROPOSAL_THRESHOLD = 500_000e18;
+	/// @dev 1,000,000 Shibui;
+	uint256 public constant MAX_PROPOSAL_THRESHOLD = 1_000_000e18;
 
 	/// @notice The number of votes in support of a proposal required in order for a quorum to be reached and for a vote to succeed.
 	/// @dev 2,500,000 = 5% of Shibui.
@@ -136,7 +136,7 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 		uint256 _votingPeriod,
 		uint256 _votingDelay,
 		uint256 _proposalThreshold
-	) internal initializer {
+	) public initializer {
 		__Context_init();
 		__Ownable_init();
 		__EIP712_init(name, version());
@@ -197,7 +197,7 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 		bytes[] memory calldatas,
 		string memory description
 	) public whenGovernorActive returns (uint256) {
-		// Allow addresses above proposal threshold and whitelisted addresses to propose
+		// Allow addresses above proposal threshold and allowlisted addresses to propose
 		require(shibui.getPriorVotes(msg.sender, block.number - 1) > proposalThreshold || isAllowlisted(msg.sender), "PROPOSER_BELOW_THRESHOLD");
 		require(
 			targets.length == values.length && targets.length == signatures.length && targets.length == calldatas.length,

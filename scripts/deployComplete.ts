@@ -35,6 +35,10 @@ VEST_END.setMonth(NOW.getMonth() + 6);
 
 const VEST_END_TIMESTAMP = BigNumber.from(VEST_END.getTime());
 
+const VOTING_PERIOD = BigNumber.from(DAY_IN_SECONDS);
+const VOTING_DELAY = BigNumber.from(1);
+const PROPOSAL_THRESHOLD = BigNumber.from(DECIMALS).mul(1_000_000);
+
 async function main() {
 	assert.notEqual(F1_ADDRESS, '');
 	assert.notEqual(C1_ADDRESS, '');
@@ -74,10 +78,14 @@ async function main() {
 
 	spinner.text = 'Deploying "GovernorCharlie" contract';
 	const GovernorCharlieContract = (await ethers.getContractFactory('GovernorCharlie')) as GovernorCharlie__factory;
-	const GovernorCharlie = (await upgrades.deployProxy(GovernorCharlieContract, [Timelock.address, Shibui.address], {
-		initializer: '__GovernorCharlie_init',
-		kind: 'transparent'
-	})) as GovernorCharlie;
+	const GovernorCharlie = (await upgrades.deployProxy(
+		GovernorCharlieContract,
+		[Timelock.address, Shibui.address, VOTING_PERIOD, VOTING_DELAY, PROPOSAL_THRESHOLD],
+		{
+			initializer: '__GovernorCharlie_init',
+			kind: 'transparent'
+		}
+	)) as GovernorCharlie;
 	await GovernorCharlie.deployed();
 
 	const VestingShibuiContract = (await ethers.getContractFactory('VestingShibui')) as VestingShibui__factory;
@@ -132,7 +140,7 @@ async function main() {
 	spinner.text = 'Transferring ownership of "VestingShibui" instances to ShibuiDAO Governance "Timelock"';
 	await F1_VestingShibui.transferOwnership(Timelock.address);
 	await C1_VestingShibui.transferOwnership(Timelock.address);
-	await C1_VestingShibui.transferOwnership(Timelock.address);
+	await A1_VestingShibui.transferOwnership(Timelock.address);
 	await A2_VestingShibui.transferOwnership(Timelock.address);
 
 	spinner.text = 'Enabling governance capabilities on "GovernorCharlie"';
