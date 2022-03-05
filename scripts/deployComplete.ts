@@ -148,6 +148,7 @@ async function main() {
 
 	console.log(
 		[
+			'',
 			` - "Shibui" deployed to ${Shibui.address}`,
 			` - "Timelock" deployed to ${Timelock.address}`,
 			` - "TokenManager" deployed to ${TokenManager.address}`,
