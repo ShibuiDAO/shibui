@@ -1,13 +1,19 @@
 import chai, { expect } from 'chai';
 import { solidity } from 'ethereum-waffle';
 import { BigNumber, ContractTransaction } from 'ethers';
+import { randomBytes } from 'ethers/lib/utils';
 import { ethers, network } from 'hardhat';
 import { promisify } from 'util';
 import type { Shibui, Shibui__factory } from '../typechain';
+import * as ethSigUtil from 'eth-sig-util';
+import { fromRpcSig } from 'ethereumjs-util';
+import { getSignersWithPrivateKeys } from './utilities/privateKeys';
 
 chai.use(solidity);
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+// const MAX_UINT256 = BigNumber.from(2).pow(256).sub(1);
+const MAX_JS_NUMBER = Number.MAX_SAFE_INTEGER;
 
 const queue = promisify(setImmediate);
 
@@ -104,6 +110,62 @@ describe('Shibui', () => {
 
 			expect(owner).to.equal(ZERO_ADDRESS);
 			await expect(shibui.transferOwnership(a0.address)).to.be.revertedWith('Ownable: caller is not the owner');
+		});
+	});
+
+	describe('delegateBySig', () => {
+		const nonce = BigNumber.from(0);
+
+		const EIP712Domain = [
+			{ name: 'name', type: 'string' },
+			{ name: 'version', type: 'string' },
+			{ name: 'chainId', type: 'uint256' },
+			{ name: 'verifyingContract', type: 'address' }
+		];
+
+		const Delegation = [
+			{ name: 'delegatee', type: 'address' },
+			{ name: 'nonce', type: 'uint256' },
+			{ name: 'expiry', type: 'uint256' }
+		];
+
+		const buildData = (chainId: number, verifyingContract: string, message: any) => ({
+			data: {
+				primaryType: 'Delegation' as const,
+				types: { EIP712Domain, Delegation },
+				domain: { name: NAME, version: '1', chainId, verifyingContract },
+				message
+			}
+		});
+
+		it('reverts if the signatory is invalid', async () => {
+			const [, minter, a0] = await ethers.getSigners();
+			const expiry = BigNumber.from(0);
+
+			await expect(shibui.connect(minter).delegateBySig(a0.address, nonce, expiry, 0, randomBytes(32), randomBytes(32))).to.be.reverted;
+		});
+
+		it('delegates on behalf of the signatory', async () => {
+			const [, minter, a0] = getSignersWithPrivateKeys(await ethers.getSigners());
+
+			const { v, r, s } = fromRpcSig(
+				ethSigUtil.signTypedMessage(
+					Buffer.from(minter.privateKey, 'hex'),
+					buildData(await minter.getChainId(), shibui.address, {
+						delegatee: a0.address,
+						nonce: nonce.toNumber(),
+						expiry: MAX_JS_NUMBER
+					})
+				)
+			);
+
+			await expect(shibui.delegateBySig(a0.address, nonce, BigNumber.from(MAX_JS_NUMBER.toString()), v, r, s))
+				.to.emit(shibui, 'DelegateChanged')
+				.withArgs(minter.address, ZERO_ADDRESS, a0.address)
+				.and //
+				.to.emit(shibui, 'DelegateVotesChanged')
+				.withArgs(a0.address, BigNumber.from(0), TOTAL_SUPPLY);
+			expect(await shibui.getCurrentVotes(a0.address)).to.eql(TOTAL_SUPPLY);
 		});
 	});
 

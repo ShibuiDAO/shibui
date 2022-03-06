@@ -15,7 +15,7 @@ export function getSignersWithPrivateKeys(signers: SignerWithAddress[]): SignerW
 		const signer = signers[i] as SignerWithAddressAndPrivateKey;
 		const wallet = hd.derivePath(`${hhHDConfig.path!}/${i}`);
 
-		signer.privateKey = wallet.privateKey;
+		signer.privateKey = wallet.privateKey.slice(2);
 		expandedSigners.push(signer);
 	}
 
