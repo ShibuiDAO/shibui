@@ -19,9 +19,11 @@ describe('VestingShibui - integration', () => {
 
 		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
 		shibui = await ShibuiContract.deploy(minter.address);
+		await shibui.deployed();
 
 		const VestingShibuiContract = (await ethers.getContractFactory('VestingShibui')) as VestingShibui__factory;
 		vesting = await VestingShibuiContract.deploy(shibui.address, a1.address);
+		await vesting.deployed();
 
 		await shibui.connect(minter).transfer(vesting.address, TOTAL_SUPPLY);
 	});

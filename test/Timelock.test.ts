@@ -15,6 +15,7 @@ describe('Timelock', () => {
 	beforeEach(async () => {
 		const TimelockContract = (await ethers.getContractFactory('Timelock')) as Timelock__factory;
 		timelock = await TimelockContract.deploy(WEEK_IN_SECONDS);
+		await timelock.deployed();
 	});
 
 	describe('ownable', () => {

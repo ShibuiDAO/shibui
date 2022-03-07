@@ -50,17 +50,18 @@ async function batchInBlock(txs: WrappedUnresolvedContractTransaction[]) {
 }
 
 describe('Shibui', () => {
+	let shibui: Shibui;
+
 	const NAME = 'Shibui';
 	const SYMBOL = '🌊';
 	const TOTAL_SUPPLY = BigNumber.from(10).pow(18).mul(50_000_000);
-
-	let shibui: Shibui;
 
 	beforeEach(async () => {
 		const [, minter] = await ethers.getSigners();
 
 		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
 		shibui = await ShibuiContract.deploy(minter.address);
+		await shibui.deployed();
 	});
 
 	describe('metadata', () => {
