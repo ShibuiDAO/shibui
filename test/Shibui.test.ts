@@ -145,6 +145,44 @@ describe('Shibui', () => {
 			await expect(shibui.connect(minter).delegateBySig(a0.address, nonce, expiry, 0, randomBytes(32), randomBytes(32))).to.be.reverted;
 		});
 
+		it('reverts if the nonce is bad', async () => {
+			const [, minter, a0] = getSignersWithPrivateKeys(await ethers.getSigners());
+			const badNonce = BigNumber.from(nonce).add(1);
+
+			const { v, r, s } = fromRpcSig(
+				ethSigUtil.signTypedMessage(
+					Buffer.from(minter.privateKey, 'hex'),
+					buildData(await minter.getChainId(), shibui.address, {
+						delegatee: a0.address,
+						nonce: badNonce.toNumber(),
+						expiry: MAX_JS_NUMBER
+					})
+				)
+			);
+
+			await expect(shibui.delegateBySig(a0.address, badNonce, BigNumber.from(MAX_JS_NUMBER.toString()), v, r, s)) //
+				.to.be.revertedWith('DELEGATE_SIG_INVALID_NONCE');
+		});
+
+		it('reverts if the signature has expired', async () => {
+			const [, minter, a0] = getSignersWithPrivateKeys(await ethers.getSigners());
+			const badExpire = 0;
+
+			const { v, r, s } = fromRpcSig(
+				ethSigUtil.signTypedMessage(
+					Buffer.from(minter.privateKey, 'hex'),
+					buildData(await minter.getChainId(), shibui.address, {
+						delegatee: a0.address,
+						nonce: nonce.toNumber(),
+						expiry: badExpire
+					})
+				)
+			);
+
+			await expect(shibui.delegateBySig(a0.address, nonce, BigNumber.from(badExpire), v, r, s)) //
+				.to.be.revertedWith('DELEGATE_SIG_EXPIRED');
+		});
+
 		it('delegates on behalf of the signatory', async () => {
 			const [, minter, a0] = getSignersWithPrivateKeys(await ethers.getSigners());
 
@@ -166,6 +204,7 @@ describe('Shibui', () => {
 				.to.emit(shibui, 'DelegateVotesChanged')
 				.withArgs(a0.address, BigNumber.from(0), TOTAL_SUPPLY);
 			expect(await shibui.getCurrentVotes(a0.address)).to.eql(TOTAL_SUPPLY);
+			expect(await shibui.delegates(minter.address)).to.equal(a0.address);
 		});
 	});
 
