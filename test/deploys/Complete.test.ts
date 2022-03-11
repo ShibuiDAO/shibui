@@ -41,8 +41,10 @@ describe('Deploy - Complete', () => {
 		const [deployer, F1, C1, A1, A2, BOBA_DAO] = await ethers.getSigners();
 
 		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
-		const Shibui = await ShibuiContract.deploy(deployer.address);
+		const Shibui = await ShibuiContract.deploy();
 		await Shibui.deployed();
+
+		await Shibui.fullMint(deployer.address);
 
 		const TimelockContract = (await ethers.getContractFactory('Timelock')) as Timelock__factory;
 		const Timelock = await TimelockContract.deploy(DAY_IN_SECONDS);

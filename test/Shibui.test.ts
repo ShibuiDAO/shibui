@@ -60,8 +60,10 @@ describe('Shibui', () => {
 		const [, minter] = await ethers.getSigners();
 
 		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
-		shibui = await ShibuiContract.deploy(minter.address);
+		shibui = await ShibuiContract.deploy();
 		await shibui.deployed();
+
+		await shibui.fullMint(minter.address);
 	});
 
 	describe('metadata', () => {
@@ -80,6 +82,14 @@ describe('Shibui', () => {
 			const minterBalance = await shibui.balanceOf(minter.address);
 
 			expect(minterBalance).to.eql(TOTAL_SUPPLY);
+		});
+	});
+
+	describe('fullMint', () => {
+		it('should fail to mint again', async () => {
+			const [, minter] = await ethers.getSigners();
+
+			await expect(shibui.fullMint(minter.address)).to.be.revertedWith('MINT_EXECUTED');
 		});
 	});
 

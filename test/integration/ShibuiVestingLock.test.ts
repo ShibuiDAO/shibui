@@ -18,8 +18,10 @@ describe('VestingShibui - integration', () => {
 		const [, minter, , a1] = await ethers.getSigners();
 
 		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
-		shibui = await ShibuiContract.deploy(minter.address);
+		shibui = await ShibuiContract.deploy();
 		await shibui.deployed();
+
+		await shibui.fullMint(minter.address);
 
 		const VestingShibuiContract = (await ethers.getContractFactory('VestingShibui')) as VestingShibui__factory;
 		vesting = await VestingShibuiContract.deploy(shibui.address, a1.address);

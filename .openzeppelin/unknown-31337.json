@@ -1,25 +1,35 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    "txHash": "0xb57c9d6d7465c999b9bf7c62f1de54b5cd74e88df622c5910f0bc71bd532f602"
+    "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+    "txHash": "0x08c25d9c93a4a550ff0783dd792e943bb0f7bef2286633df4b3d3df1ccc1a447"
   },
   "proxies": [
-    {
-      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0xfdb83afe10a8a91a7ef871e925d32812e19869453d6e895029d355daaf5d721c",
-      "kind": "transparent"
-    },
     {
       "address": "0x0E801D84Fa97b50751Dbf25036d067dCf18858bF",
       "txHash": "0x138cd952ff19d7d3abdfb6fec511faf29c84cb67df21c256760f0b9e3a5c0a8f",
       "kind": "transparent"
+    },
+    {
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "txHash": "0x320d54c5007adba60d377f8e9a33afda0546641d5019e2197338c5d93665dec5",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "txHash": "0xc1bc6dd1ca87a76dbb16ebc40a43e9618f0d9539baeb593268bad835604a0dc0",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9d4454B023096f34B160D6B654540c56A1F81688",
+      "txHash": "0x675da5191ae850e47b4205d6456ca82d5df559870ea21c7cff8280c89e957182",
+      "kind": "transparent"
     }
   ],
   "impls": {
-    "bab218b7faf0dc81b0b07ffb51d0b6b79a045906da64c265fa3fd0a4c0e01432": {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xe8533cd41ed964b51685b319d07f5d5427bfdf55047a1c07f29d752c6cb9cfde",
+    "9eca9c569c3f0c8c7a151494f220c3a1a5372fdc100ec4673b7edf334cdbf0c9": {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x2a6696830512963dbc0a735aa31b05bf9f45d6ce378f85eefc47fd2004ec5e39",
       "layout": {
         "storage": [
           {
@@ -90,17 +100,17 @@
             "label": "timelock",
             "offset": 0,
             "slot": "153",
-            "type": "t_contract(ITimelock)10980",
+            "type": "t_contract(ITimelock)8499",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:84"
+            "src": "src/contracts/governance/GovernorCharlie.sol:80"
           },
           {
             "label": "shibui",
             "offset": 0,
             "slot": "154",
-            "type": "t_contract(IShibui)12397",
+            "type": "t_contract(IShibui)9265",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:86"
+            "src": "src/contracts/governance/GovernorCharlie.sol:82"
           },
           {
             "label": "votingPeriod",
@@ -108,7 +118,7 @@
             "slot": "155",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:93"
+            "src": "src/contracts/governance/GovernorCharlie.sol:89"
           },
           {
             "label": "votingDelay",
@@ -116,7 +126,7 @@
             "slot": "156",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:96"
+            "src": "src/contracts/governance/GovernorCharlie.sol:92"
           },
           {
             "label": "proposalThreshold",
@@ -124,7 +134,7 @@
             "slot": "157",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:99"
+            "src": "src/contracts/governance/GovernorCharlie.sol:95"
           },
           {
             "label": "initialProposalId",
@@ -132,7 +142,7 @@
             "slot": "158",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:102"
+            "src": "src/contracts/governance/GovernorCharlie.sol:98"
           },
           {
             "label": "proposalCount",
@@ -140,15 +150,15 @@
             "slot": "159",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:109"
+            "src": "src/contracts/governance/GovernorCharlie.sol:105"
           },
           {
             "label": "proposals",
             "offset": 0,
             "slot": "160",
-            "type": "t_mapping(t_uint256,t_struct(Proposal)10818_storage)",
+            "type": "t_mapping(t_uint256,t_struct(Proposal)8343_storage)",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:112"
+            "src": "src/contracts/governance/GovernorCharlie.sol:108"
           },
           {
             "label": "latestProposalIds",
@@ -156,7 +166,7 @@
             "slot": "161",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:115"
+            "src": "src/contracts/governance/GovernorCharlie.sol:111"
           },
           {
             "label": "allowlistGuardian",
@@ -164,7 +174,7 @@
             "slot": "162",
             "type": "t_address",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:122"
+            "src": "src/contracts/governance/GovernorCharlie.sol:118"
           },
           {
             "label": "allowlistAccountExpirations",
@@ -172,7 +182,7 @@
             "slot": "163",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:125"
+            "src": "src/contracts/governance/GovernorCharlie.sol:121"
           }
         ],
         "types": {
@@ -206,25 +216,25 @@
           "t_bytes_storage": {
             "label": "bytes"
           },
-          "t_contract(IShibui)12397": {
+          "t_contract(IShibui)9265": {
             "label": "contract IShibui"
           },
-          "t_contract(ITimelock)10980": {
+          "t_contract(ITimelock)8499": {
             "label": "contract ITimelock"
           },
-          "t_mapping(t_address,t_struct(Receipt)10762_storage)": {
+          "t_mapping(t_address,t_struct(Receipt)8287_storage)": {
             "label": "mapping(address => struct IGovernorCharlie.Receipt)"
           },
           "t_mapping(t_address,t_uint256)": {
             "label": "mapping(address => uint256)"
           },
-          "t_mapping(t_uint256,t_struct(Proposal)10818_storage)": {
+          "t_mapping(t_uint256,t_struct(Proposal)8343_storage)": {
             "label": "mapping(uint256 => struct IGovernorCharlie.Proposal)"
           },
           "t_string_storage": {
             "label": "string"
           },
-          "t_struct(Proposal)10818_storage": {
+          "t_struct(Proposal)8343_storage": {
             "label": "struct IGovernorCharlie.Proposal",
             "members": [
               {
@@ -289,11 +299,11 @@
               },
               {
                 "label": "receipts",
-                "type": "t_mapping(t_address,t_struct(Receipt)10762_storage)"
+                "type": "t_mapping(t_address,t_struct(Receipt)8287_storage)"
               }
             ]
           },
-          "t_struct(Receipt)10762_storage": {
+          "t_struct(Receipt)8287_storage": {
             "label": "struct IGovernorCharlie.Receipt",
             "members": [
               {

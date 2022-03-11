@@ -68,10 +68,11 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	///                            INITIALIZATION                            ///
 	////////////////////////////////////////////////////////////////////////////
 
-	/// @param _recipient The account getting minted the whole initial token supply to distribute.
-	constructor(address _recipient) {
-		// mint initial supply
-		ERC20._mint(_recipient, 50_000_000e18); // 50 million
+	/// @param _minter The account getting minted the whole initial token supply to distribute.
+	function fullMint(address _minter) public onlyOwner {
+		require(totalSupply() == 0, "MINT_EXECUTED");
+
+		ERC20._mint(_minter, 50_000_000e18);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
