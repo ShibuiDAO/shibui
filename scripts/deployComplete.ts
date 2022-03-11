@@ -66,7 +66,7 @@ async function main() {
 	const Shibui = await ShibuiContract.deploy();
 	await Shibui.deployed();
 
-	await Shibui.fullMint(deployer.address);
+	await Shibui.mintFull(deployer.address);
 
 	spinner.text = 'Deploying "Timelock" contract';
 	const TimelockContract = (await ethers.getContractFactory('Timelock')) as Timelock__factory;

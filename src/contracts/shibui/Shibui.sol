@@ -30,6 +30,13 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	/// @notice The EIP-712 typehash for the delegation struct used by the contract.
 	bytes32 public constant _DELEGATION_TYPEHASH = keccak256("Delegation(address delegatee,uint256 nonce,uint256 expiry)");
 
+	///////////////////////////////////////////////////////////////////////////////
+	///                                CONSTANTS                                ///
+	///////////////////////////////////////////////////////////////////////////////
+
+	/// @notice A constant defining the max supply for "Shibui" (🌊).
+	uint96 public constant MAX_SUPPLY = 50_000_000e18;
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///                                                    GOVERNANCE RELATED STORAGE                                                    ///
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,11 +75,28 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	///                            INITIALIZATION                            ///
 	////////////////////////////////////////////////////////////////////////////
 
-	/// @param _minter The account getting minted the whole initial token supply to distribute.
-	function fullMint(address _minter) public onlyOwner {
+	/// @notice Mints the max token supply to `_recipient`.
+	/// @dev Can only be ran once and alone as calling "mintAmount" would prevent this from starting at 0.
+	///      For UX purposes the functions prevents minting to address(0).
+	/// @param _recipient The account getting minted the whole initial token supply to distribute.
+	function mintFull(address _recipient) external onlyOwner {
+		require(_recipient != address(0), "MINT_BURN");
 		require(totalSupply() == 0, "MINT_EXECUTED");
 
-		ERC20._mint(_minter, 50_000_000e18);
+		ERC20._mint(_recipient, MAX_SUPPLY);
+	}
+
+	/// @notice Mints a specific amount (`_amount`) of "Shibui" (🌊) to `_recipient`.
+	/// @dev Can only be used if the total supply is below max supply and if the future supply is below max supply.
+	///      For UX purposes the functions prevents minting to address(0).
+	/// @param _recipient The account to which to mint.
+	/// @param _amount The amount of tokens to mint.
+	function mintAmount(address _recipient, uint96 _amount) external onlyOwner {
+		require(_recipient != address(0), "MINT_BURN");
+		require(totalSupply() <= MAX_SUPPLY, "MINT_COMPLETED");
+		require((totalSupply() + _amount) <= MAX_SUPPLY, "MINT_WOULD_EXCEED");
+
+		ERC20._mint(_recipient, _amount);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +106,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	/// @notice Delegate votes from `msg.sender` to `delegatee`.
 	/// @param delegatee The address to delegate votes to.
 	/// @inheritdoc IShibui
-	function delegate(address delegatee) public override {
+	function delegate(address delegatee) external override {
 		return _delegate(msg.sender, delegatee);
 	}
 
@@ -101,7 +125,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 		uint8 v,
 		bytes32 r,
 		bytes32 s
-	) public override {
+	) external override {
 		bytes32 structHash = keccak256(abi.encode(_DELEGATION_TYPEHASH, delegatee, nonce, expiry));
 		bytes32 hash = _hashTypedDataV4(structHash);
 
@@ -121,9 +145,9 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 
 	/// @notice Gets the current votes balance for `account`.
 	/// @param account The address to get votes balance.
-	/// @return The number of current votes for `account`.
+	/// @return votes The number of current votes for `account`.
 	/// @inheritdoc IShibui
-	function getCurrentVotes(address account) external view override returns (uint96) {
+	function getCurrentVotes(address account) external view override returns (uint96 votes) {
 		uint32 nCheckpoints = numCheckpoints[account];
 		return nCheckpoints > 0 ? checkpoints[account][nCheckpoints - 1].votes : 0;
 	}
@@ -132,9 +156,9 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 	/// @dev Block number must be a finalized block or else this function will revert to prevent misinformation.
 	/// @param account The address of the account to check.
 	/// @param blockNumber The block number to get the vote balance at.
-	/// @return The number of votes the account had as of the given block.
+	/// @return votes The number of votes the account had as of the given block.
 	/// @inheritdoc IShibui
-	function getPriorVotes(address account, uint256 blockNumber) public view override returns (uint96) {
+	function getPriorVotes(address account, uint256 blockNumber) external view override returns (uint96 votes) {
 		require(blockNumber < block.number, "VOTES_NOT_YET_DETERMINED");
 
 		uint32 nCheckpoints = numCheckpoints[account];
@@ -228,14 +252,14 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 
 	/// @notice Checks if `_holder` is barred from transferring tokens.
 	/// @param _holder The target holder address.
-	/// @return Whether `_holder` is barred from transferring tokens.
-	function isLocked(address _holder) public view virtual returns (bool) {
+	/// @return locked Whether `_holder` is barred from transferring tokens.
+	function isLocked(address _holder) public view virtual returns (bool locked) {
 		return lockedHolders[_holder];
 	}
 
 	/// @notice Locks `_holder` from transferring tokens.
 	/// @param _holder The target holder address.
-	function lockHolder(address _holder) public onlyOwner {
+	function lockHolder(address _holder) external onlyOwner {
 		emit HolderLocked(_holder, _msgSender());
 
 		lockedHolders[_holder] = true;
@@ -243,7 +267,7 @@ contract Shibui is ERC20("Shibui", unicode"🌊"), EIP712, ERC20Burnable, ERC20S
 
 	/// @notice Unlocks `_holder` from transferring tokens.
 	/// @param _holder The target holder address.
-	function unlockHolder(address _holder) public onlyOwner {
+	function unlockHolder(address _holder) external onlyOwner {
 		emit HolderUnlocked(_holder, _msgSender());
 
 		lockedHolders[_holder] = false;

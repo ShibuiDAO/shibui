@@ -27,7 +27,7 @@ describe('GovernorCharlie#propose', () => {
 		shibui = await ShibuiContract.deploy();
 		await shibui.deployed();
 
-		await shibui.fullMint(minter.address);
+		await shibui.mintFull(minter.address);
 
 		const TimelockContract = (await ethers.getContractFactory('Timelock')) as Timelock__factory;
 		timelock = await TimelockContract.deploy(DAY_IN_SECONDS);

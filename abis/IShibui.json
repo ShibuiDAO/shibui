@@ -242,7 +242,7 @@
     "outputs": [
       {
         "internalType": "uint96",
-        "name": "",
+        "name": "votes",
         "type": "uint96"
       }
     ],
@@ -266,7 +266,7 @@
     "outputs": [
       {
         "internalType": "uint96",
-        "name": "",
+        "name": "votes",
         "type": "uint96"
       }
     ],

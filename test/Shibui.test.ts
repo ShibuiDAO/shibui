@@ -63,7 +63,7 @@ describe('Shibui', () => {
 		shibui = await ShibuiContract.deploy();
 		await shibui.deployed();
 
-		await shibui.fullMint(minter.address);
+		await shibui.mintFull(minter.address);
 	});
 
 	describe('metadata', () => {
@@ -85,11 +85,11 @@ describe('Shibui', () => {
 		});
 	});
 
-	describe('fullMint', () => {
-		it('should fail to mint again', async () => {
+	describe('minting', () => {
+		it('should fail to mint after full again', async () => {
 			const [, minter] = await ethers.getSigners();
 
-			await expect(shibui.fullMint(minter.address)).to.be.revertedWith('MINT_EXECUTED');
+			await expect(shibui.mintFull(minter.address)).to.be.revertedWith('MINT_EXECUTED');
 		});
 	});
 

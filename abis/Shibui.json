@@ -184,6 +184,19 @@
   },
   {
     "inputs": [],
+    "name": "MAX_SUPPLY",
+    "outputs": [
+      {
+        "internalType": "uint96",
+        "name": "",
+        "type": "uint96"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "_DELEGATION_TYPEHASH",
     "outputs": [
       {
@@ -457,19 +470,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_minter",
-        "type": "address"
-      }
-    ],
-    "name": "fullMint",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "account",
         "type": "address"
       }
@@ -478,7 +478,7 @@
     "outputs": [
       {
         "internalType": "uint96",
-        "name": "",
+        "name": "votes",
         "type": "uint96"
       }
     ],
@@ -502,7 +502,7 @@
     "outputs": [
       {
         "internalType": "uint96",
-        "name": "",
+        "name": "votes",
         "type": "uint96"
       }
     ],
@@ -545,7 +545,7 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "",
+        "name": "locked",
         "type": "bool"
       }
     ],
@@ -582,6 +582,37 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_amount",
+        "type": "uint96"
+      }
+    ],
+    "name": "mintAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_recipient",
+        "type": "address"
+      }
+    ],
+    "name": "mintFull",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
