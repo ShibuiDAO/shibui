@@ -10,7 +10,8 @@
 		"compile": "yarn compile:hardhat",
 		"compile:hardhat": "hardhat compile",
 		"test:hardhat": "hardhat test --network hardhat",
-		"test:hardhat:coverage": "hardhat coverage --network hardhat"
+		"test:hardhat:coverage": "hardhat coverage --network hardhat",
+		"deploy:shibui:frame": "hardhat run ./scripts/deployShibui.ts --network frame"
 	},
 	"files": [],
 	"dependencies": {
