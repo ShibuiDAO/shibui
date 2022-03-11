@@ -85,31 +85,18 @@
       },
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "executor",
-        "type": "address"
-      }
-    ],
-    "name": "HolderLocked",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "executor",
         "type": "address"
       }
     ],
-    "name": "HolderUnlocked",
+    "name": "HolderLockUpdated",
     "type": "event"
   },
   {
@@ -334,26 +321,33 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "_account",
         "type": "address"
       },
       {
         "internalType": "uint32",
-        "name": "",
+        "name": "_index",
         "type": "uint32"
       }
     ],
     "name": "checkpoints",
     "outputs": [
       {
-        "internalType": "uint32",
-        "name": "fromBlock",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint96",
-        "name": "votes",
-        "type": "uint96"
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "fromBlock",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint96",
+            "name": "votes",
+            "type": "uint96"
+          }
+        ],
+        "internalType": "struct IShibui.Checkpoint",
+        "name": "checkpoint",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -400,7 +394,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "delegatee",
+        "name": "_delegatee",
         "type": "address"
       }
     ],
@@ -413,32 +407,32 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "delegatee",
+        "name": "_delegatee",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "expiry",
+        "name": "_expiry",
         "type": "uint256"
       },
       {
         "internalType": "uint8",
-        "name": "v",
+        "name": "_v",
         "type": "uint8"
       },
       {
         "internalType": "bytes32",
-        "name": "r",
+        "name": "_r",
         "type": "bytes32"
       },
       {
         "internalType": "bytes32",
-        "name": "s",
+        "name": "_s",
         "type": "bytes32"
       }
     ],
@@ -470,7 +464,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "_account",
         "type": "address"
       }
     ],
@@ -489,12 +483,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "_account",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "blockNumber",
+        "name": "_blockNumber",
         "type": "uint256"
       }
     ],

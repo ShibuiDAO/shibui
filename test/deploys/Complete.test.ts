@@ -37,7 +37,7 @@ describe('Deploy - Complete', () => {
 	const VOTING_DELAY = BigNumber.from(1);
 	const PROPOSAL_THRESHOLD = BigNumber.from(DECIMALS).mul(1_000_000);
 
-	it('should deploy', async () => {
+	it('should deploy with everything', async () => {
 		const [deployer, F1, C1, A1, A2, BOBA_DAO] = await ethers.getSigners();
 
 		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
@@ -158,5 +158,11 @@ describe('Deploy - Complete', () => {
 		expect(await Shibui.getCurrentVotes(BOBA_DAO.address)).to.eql(BOBA_DAO_DISTRIBUTION);
 
 		await expect(Shibui.connect(BOBA_DAO).transfer(deployer.address, 1)).to.revertedWith('HOLDER_LOCKED_FROM_TRANSFER');
+	});
+
+	it('should deploy Shibui', async () => {
+		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
+		const Shibui = await ShibuiContract.deploy();
+		await Shibui.deployed();
 	});
 });

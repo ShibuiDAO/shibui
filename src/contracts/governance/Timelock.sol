@@ -11,7 +11,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ITimelock} from "./interfaces/ITimelock.sol";
 
 /// @title Timelock
-/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/Timelock.sol)
+/// @author Shibui (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/Timelock.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Timelock.sol)
 contract Timelock is ERC721Holder, ERC1155Holder, Ownable, ITimelock {
 	///////////////////////////////////////////////////

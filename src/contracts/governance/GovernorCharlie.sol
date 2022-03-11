@@ -19,7 +19,7 @@ import {ECDSAUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/crypto
 
 /// @title Governor Charlie
 /// @dev This is centred around Boba so some out-of-place tweaks were made.
-/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/GovernorCharlie.sol)
+/// @author Shibui (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/GovernorCharlie.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorBravoDelegate.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorBravoInterfaces.sol)
 contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeable, EIP712Upgradeable, IGovernorCharlie {

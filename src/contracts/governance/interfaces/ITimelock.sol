@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 pragma abicoder v2;
 
-/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/interfaces/ITimelock.sol)
+/// @author Shibui (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/interfaces/ITimelock.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Timelock.sol)
 /// @author Modified from Alchemist (https://github.com/alchemistcoin/alchemist/blob/main/contracts/alchemist/TimelockConfig.sol)
 interface ITimelock {

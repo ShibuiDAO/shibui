@@ -148,6 +148,8 @@ async function main() {
 	spinner.text = 'Enabling governance capabilities on "GovernorCharlie"';
 	await GovernorCharlie.govern(BigNumber.from(1));
 
+	spinner.succeed();
+
 	console.log(
 		[
 			'',

@@ -338,28 +338,32 @@ describe('Shibui', () => {
 			expect(await shibui.lockedHolders(a0.address)).to.equal(false);
 
 			await expect(shibui.lockHolder(a0.address)) //
-				.to.emit(shibui, 'HolderLocked')
-				.withArgs(a0.address, deployer.address);
+				.to.emit(shibui, 'HolderLockUpdated')
+				.withArgs(a0.address, true, deployer.address);
 
 			expect(await shibui.lockedHolders(a0.address)).to.equal(true);
 
 			await expect(shibui.unlockHolder(a0.address)) //
-				.to.emit(shibui, 'HolderUnlocked')
-				.withArgs(a0.address, deployer.address);
+				.to.emit(shibui, 'HolderLockUpdated')
+				.withArgs(a0.address, false, deployer.address);
 
 			expect(await shibui.lockedHolders(a0.address)).to.equal(false);
 		});
 
 		it('should prevent transfer', async () => {
-			const [deployer, minter, a0, a1] = await ethers.getSigners();
+			const [deployer, minter, a0, a1, a2] = await ethers.getSigners();
 
 			await shibui.connect(minter).transfer(a0.address, 100);
 
-			await expect(shibui.lockHolder(a0.address)) //
-				.to.emit(shibui, 'HolderLocked')
-				.withArgs(a0.address, deployer.address);
+			await shibui.connect(a0).transfer(a1.address, 50);
+			expect(await shibui.balanceOf(a1.address)).to.eql(BigNumber.from(50));
 
-			await expect(shibui.connect(a0).transfer(a1.address, 50)).to.revertedWith('HOLDER_LOCKED_FROM_TRANSFER');
+			await expect(shibui.lockHolder(a0.address)) //
+				.to.emit(shibui, 'HolderLockUpdated')
+				.withArgs(a0.address, true, deployer.address);
+
+			await expect(shibui.connect(a0).transfer(a2.address, 50)).to.revertedWith('HOLDER_LOCKED_FROM_TRANSFER');
+			expect(await shibui.balanceOf(a2.address)).to.eql(BigNumber.from(0));
 		});
 	});
 });

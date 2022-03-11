@@ -16,7 +16,7 @@ import {ERC20} from "@rari-capital/solmate/src/tokens/ERC20.sol";
 import {SafeTransferLib} from "@rari-capital/solmate/src/utils/SafeTransferLib.sol";
 
 /// @title TokenManager
-/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/TokenManager.sol)
+/// @author Shibui (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/TokenManager.sol)
 /// @author Modified from Rollcall by Tally (https://github.com/withtally/rollcall/blob/main/src/Treasury.sol)
 /// @author Modified from Alchemist (https://github.com/alchemistcoin/alchemist/blob/main/contracts/TokenManager.sol)
 contract TokenManager is ERC721Holder, ERC1155Holder, Ownable {

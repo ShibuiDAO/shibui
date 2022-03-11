@@ -8,8 +8,24 @@ import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft
 
 /// @title "🌊 Shibui 🌊" public interface
 /// @notice Inteface describing the functions, events, and structs for the "Shibui" (🌊) governance token.
-/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/interfaces/IShibui.sol)
+/// @author Shibui (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/shibui/interfaces/IShibui.sol)
 interface IShibui is IERC20, IERC20Permit {
+	//////////////////////////////////////////////////////////////////////////////////////
+	///                                EIP712 CONSTANTS                                ///
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	/// @notice The EIP-712 typehash for the delegation struct used by the contract.
+	// solhint-disable-next-line func-name-mixedcase, var-name-mixedcase
+	function _DELEGATION_TYPEHASH() external pure returns (bytes32 _DELEGATION_TYPEHASH);
+
+	///////////////////////////////////////////////////////////////////////////////
+	///                                CONSTANTS                                ///
+	///////////////////////////////////////////////////////////////////////////////
+
+	/// @notice A constant defining the max supply for "Shibui" (🌊).
+	// solhint-disable-next-line func-name-mixedcase, var-name-mixedcase
+	function MAX_SUPPLY() external pure returns (uint96 MAX_SUPPLY);
+
 	////////////////////////////////////
 	///            EVENTS            ///
 	////////////////////////////////////
@@ -37,6 +53,19 @@ interface IShibui is IERC20, IERC20Permit {
 		uint32 fromBlock;
 		uint96 votes;
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///                                                    GOVERNANCE RELATED STORAGE                                                    ///
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/// @notice A record of each accounts delegate.
+	function delegates(address delegator) external view returns (address delegatee);
+
+	/// @notice A record of votes checkpoints for each account, by index.
+	function checkpoints(address account, uint32 index) external view returns (Checkpoint memory checkpoint);
+
+	/// @notice The number of checkpoints for each account.
+	function numCheckpoints(address account) external view returns (uint32 number);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///                                                  USER DELEGATION FUNCTIONS                                                  ///

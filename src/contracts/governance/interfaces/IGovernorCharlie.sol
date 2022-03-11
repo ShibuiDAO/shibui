@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 pragma abicoder v2;
 
-/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/interfaces/IGovernorCharlie.sol)
+/// @author Shibui (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/interfaces/IGovernorCharlie.sol)
 /// @author Modified from Compound (https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorBravoInterfaces.sol)
 interface IGovernorCharlie {
 	/// @notice An event emitted when the voting period is set.

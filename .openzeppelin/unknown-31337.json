@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-    "txHash": "0x0c75b510cb2af216f75aab3a0a9e3f8f3565f06eb65593d93ede82e0df7e1261"
+    "txHash": "0xa3cbf41da5aa6a2714fc362b92b962cc9a7d5a8ab15aa099ad4eb8ef81daf9f5"
   },
   "proxies": [
     {
@@ -16,20 +16,25 @@
       "kind": "transparent"
     },
     {
-      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0x6db28f745f6aebf4e27d74cf050865afd5c17127bfa8e1b7adb3436d7a20e0e8",
+      "address": "0x9d4454B023096f34B160D6B654540c56A1F81688",
+      "txHash": "0x36b96336db998047599cc23584d0abafe5817091b326c1a8053e72412a252794",
       "kind": "transparent"
     },
     {
-      "address": "0x9d4454B023096f34B160D6B654540c56A1F81688",
-      "txHash": "0xa5f608b717c014116d028153194280ab95ca312e2e407e6b0fa9e02dbd0d62c1",
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "txHash": "0xe960a0f357c947eac1208e478029ab928a7fc75bbfb4e4404c4f985c1428677f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00",
+      "txHash": "0x1f2aa1a1cb76cfc04929dfb0d71d1af1be0008717ca0a195045f6469d9961da9",
       "kind": "transparent"
     }
   ],
   "impls": {
     "9eca9c569c3f0c8c7a151494f220c3a1a5372fdc100ec4673b7edf334cdbf0c9": {
       "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0xdf9a90cc40419a99e15c2272dbd9dc843913b329a037ae4c05323030fb5c530a",
+      "txHash": "0x67b7b7028ec038013f77275ff6ac84688386e459e736111487ef0765a171a60d",
       "layout": {
         "storage": [
           {
@@ -108,7 +113,7 @@
             "label": "shibui",
             "offset": 0,
             "slot": "154",
-            "type": "t_contract(IShibui)9326",
+            "type": "t_contract(IShibui)9451",
             "contract": "GovernorCharlie",
             "src": "src/contracts/governance/GovernorCharlie.sol:82"
           },
@@ -216,7 +221,7 @@
           "t_bytes_storage": {
             "label": "bytes"
           },
-          "t_contract(IShibui)9326": {
+          "t_contract(IShibui)9451": {
             "label": "contract IShibui"
           },
           "t_contract(ITimelock)8499": {

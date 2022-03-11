@@ -6,7 +6,7 @@ pragma abicoder v2;
 import {ICrossDomainMessenger} from "@eth-optimism/contracts/libraries/bridge/ICrossDomainMessenger.sol";
 
 /// @title L2 -> L1 Executor
-/// @author ShibuiDAO (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/L1Executor.sol)
+/// @author Shibui (https://github.com/ShibuiDAO/shibui/blob/main/src/contracts/governance/L1Executor.sol)
 /// @author Modified from Rollcall by Tally (https://github.com/withtally/rollcall/blob/main/src/Executor.sol)
 contract L1Executor {
 	///////////////////////////////////////////////////
