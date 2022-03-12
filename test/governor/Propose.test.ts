@@ -3,22 +3,15 @@ import { solidity } from 'ethereum-waffle';
 import { BigNumber } from 'ethers';
 import { solidityPack } from 'ethers/lib/utils';
 import { ethers, upgrades } from 'hardhat';
+import { DAY_IN_SECONDS, PROPOSAL_THRESHOLD, TOTAL_SUPPLY, VOTING_DELAY, VOTING_PERIOD } from '../../constants';
 import type { GovernorCharlie, GovernorCharlie__factory, Shibui, Shibui__factory, Timelock, Timelock__factory } from '../../typechain';
 
 chai.use(solidity);
-
-const DECIMALS = BigNumber.from(10).pow(18);
 
 describe('GovernorCharlie#propose', () => {
 	let shibui: Shibui;
 	let timelock: Timelock;
 	let governor: GovernorCharlie;
-
-	const DAY_IN_SECONDS = BigNumber.from(1).mul(1).mul(24).mul(60).mul(60);
-
-	const VOTING_PERIOD = BigNumber.from(DAY_IN_SECONDS);
-	const VOTING_DELAY = BigNumber.from(1);
-	const PROPOSAL_THRESHOLD = BigNumber.from(DECIMALS).mul(1_000_000);
 
 	beforeEach(async () => {
 		const [, minter, a0] = await ethers.getSigners();
@@ -28,6 +21,7 @@ describe('GovernorCharlie#propose', () => {
 		await shibui.deployed();
 
 		await shibui.mintFull(minter.address);
+		expect(await shibui.balanceOf(minter.address)).to.eql(TOTAL_SUPPLY);
 
 		const TimelockContract = (await ethers.getContractFactory('Timelock')) as Timelock__factory;
 		timelock = await TimelockContract.deploy(DAY_IN_SECONDS);

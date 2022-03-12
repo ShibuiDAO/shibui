@@ -2,6 +2,18 @@ import chai, { expect } from 'chai';
 import { solidity } from 'ethereum-waffle';
 import { BigNumber } from 'ethers';
 import { ethers, network, upgrades } from 'hardhat';
+import {
+	A_DISTRIBUTION,
+	BOBA_DAO_DISTRIBUTION,
+	C_DISTRIBUTION,
+	DAY_IN_SECONDS,
+	F_DISTRIBUTION,
+	PROPOSAL_THRESHOLD,
+	TREASURY_DISTRIBUTION,
+	VOTING_DELAY,
+	VOTING_PERIOD,
+	ZERO_ADDRESS
+} from '../../constants';
 import type {
 	GovernorCharlie,
 	GovernorCharlie__factory,
@@ -13,29 +25,13 @@ import type {
 
 chai.use(solidity);
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-
 const NOW = new Date();
-const DECIMALS = BigNumber.from(10).pow(18);
 
 describe('Deploy - Complete', () => {
-	// const TOTAL_SUPPLY = BigNumber.from(DECIMALS).mul(50_000_000);
-
-	const F_DISTRIBUTION = BigNumber.from(DECIMALS).mul(10_000_000);
-	const C_DISTRIBUTION = BigNumber.from(DECIMALS).mul(500_000);
-	const A_DISTRIBUTION = BigNumber.from(DECIMALS).mul(2_000_000);
-	const BOBA_DAO_DISTRIBUTION = BigNumber.from(DECIMALS).mul(2_500_000);
-	const TREASURY_DISTRIBUTION = BigNumber.from(DECIMALS).mul(20_000_000);
-
 	const VEST_END = new Date(NOW);
 	VEST_END.setMonth(NOW.getMonth() + 6);
 
 	const VEST_END_TIMESTAMP = BigNumber.from(VEST_END.getTime());
-	const DAY_IN_SECONDS = BigNumber.from(1).mul(1).mul(24).mul(60).mul(60);
-
-	const VOTING_PERIOD = BigNumber.from(DAY_IN_SECONDS);
-	const VOTING_DELAY = BigNumber.from(1);
-	const PROPOSAL_THRESHOLD = BigNumber.from(DECIMALS).mul(1_000_000);
 
 	it('should deploy with everything', async () => {
 		const [deployer, F1, C1, A1, A2, BOBA_DAO] = await ethers.getSigners();

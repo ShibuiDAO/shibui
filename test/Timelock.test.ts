@@ -1,13 +1,10 @@
 import chai, { expect } from 'chai';
 import { solidity } from 'ethereum-waffle';
-import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
+import { WEEK_IN_SECONDS, ZERO_ADDRESS } from '../constants';
 import type { Timelock, Timelock__factory } from '../typechain';
 
 chai.use(solidity);
-
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-const WEEK_IN_SECONDS = BigNumber.from(1).mul(7).mul(24).mul(60).mul(60);
 
 describe('Timelock', () => {
 	let timelock: Timelock;

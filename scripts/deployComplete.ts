@@ -2,6 +2,23 @@ import assert from 'assert';
 import { BigNumber } from 'ethers';
 import { ethers, upgrades } from 'hardhat';
 import ora from 'ora';
+import {
+	A1_ADDRESS,
+	A2_ADDRESS,
+	A_DISTRIBUTION,
+	BOBA_DAO_ADDRESS,
+	BOBA_DAO_DISTRIBUTION,
+	C1_ADDRESS,
+	C_DISTRIBUTION,
+	DAY_IN_SECONDS,
+	F1_ADDRESS,
+	F_DISTRIBUTION,
+	PROPOSAL_THRESHOLD,
+	TOTAL_SUPPLY,
+	TREASURY_DISTRIBUTION,
+	VOTING_DELAY,
+	VOTING_PERIOD
+} from '../constants';
 import type {
 	GovernorCharlie,
 	GovernorCharlie__factory,
@@ -11,33 +28,11 @@ import type {
 	VestingShibui__factory
 } from '../typechain';
 
-const DAY_IN_SECONDS = BigNumber.from(1).mul(1).mul(24).mul(60).mul(60);
-
-const F1_ADDRESS = '0xf82d0ea7A2eDde6d30cAf8A1E6Fed09f726fD584';
-const C1_ADDRESS = '0x147439cBFb58fbb13a3149BCd9159d21fbD9F799';
-const A1_ADDRESS = '0x25a98B269F4200A53fA8352d64f5115bb1Ef05eb';
-const A2_ADDRESS = '0xDF10742993eC99c895B2166267eAA4ce864209A8';
-const BOBA_DAO_ADDRESS = '0x2CC555B5B1a4Cf7fA5401B29ab46fc5ba2e205b0';
-
-const DECIMALS = BigNumber.from(10).pow(18);
-
-const TOTAL_SUPPLY = BigNumber.from(DECIMALS).mul(50_000_000);
-
-const F_DISTRIBUTION = BigNumber.from(DECIMALS).mul(10_000_000);
-const C_DISTRIBUTION = BigNumber.from(DECIMALS).mul(500_000);
-const A_DISTRIBUTION = BigNumber.from(DECIMALS).mul(2_000_000);
-const BOBA_DAO_DISTRIBUTION = BigNumber.from(DECIMALS).mul(2_500_000);
-const TREASURY_DISTRIBUTION = BigNumber.from(DECIMALS).mul(20_000_000);
-
 const NOW = new Date();
 const VEST_END = new Date(NOW);
 VEST_END.setMonth(NOW.getMonth() + 6);
 
 const VEST_END_TIMESTAMP = BigNumber.from(VEST_END.getTime());
-
-const VOTING_PERIOD = BigNumber.from(DAY_IN_SECONDS);
-const VOTING_DELAY = BigNumber.from(1);
-const PROPOSAL_THRESHOLD = BigNumber.from(DECIMALS).mul(1_000_000);
 
 async function main() {
 	assert.notEqual(F1_ADDRESS, '');

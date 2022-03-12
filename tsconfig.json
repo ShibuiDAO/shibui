@@ -8,5 +8,5 @@
 		"outDir": "dist"
 	},
 	"include": ["test/", "scripts/"],
-	"files": ["./config.hardhat.ts", "./hardhat.config.ts", "./networks.hardhat.ts"]
+	"files": ["./config.hardhat.ts", "./hardhat.config.ts", "./networks.hardhat.ts", "./constants.ts"]
 }

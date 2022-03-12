@@ -1,60 +1,25 @@
 import chai, { expect } from 'chai';
+import * as ethSigUtil from 'eth-sig-util';
 import { solidity } from 'ethereum-waffle';
-import { BigNumber, ContractTransaction } from 'ethers';
+import { fromRpcSig } from 'ethereumjs-util';
+import { BigNumber } from 'ethers';
 import { randomBytes } from 'ethers/lib/utils';
 import { ethers, network } from 'hardhat';
-import { promisify } from 'util';
+import { TOTAL_SUPPLY, ZERO_ADDRESS } from '../constants';
 import type { Shibui, Shibui__factory } from '../typechain';
-import * as ethSigUtil from 'eth-sig-util';
-import { fromRpcSig } from 'ethereumjs-util';
+import { batchInBlock } from './utilities/batchedTransactions';
 import { getSignersWithPrivateKeys } from './utilities/privateKeys';
 
 chai.use(solidity);
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 // const MAX_UINT256 = BigNumber.from(2).pow(256).sub(1);
 const MAX_JS_NUMBER = Number.MAX_SAFE_INTEGER;
-
-const queue = promisify(setImmediate);
-
-async function countPendingTransactions() {
-	// eslint-disable-next-line radix
-	return parseInt(await network.provider.send('eth_getBlockTransactionCountByNumber', ['pending']));
-}
-
-export type WrappedUnresolvedContractTransaction = () => Promise<ContractTransaction>;
-
-async function batchInBlock(txs: WrappedUnresolvedContractTransaction[]) {
-	try {
-		// disable auto-mining
-		await network.provider.send('evm_setAutomine', [false]);
-		// send all transactions
-		const promises = txs.map((fn) => fn());
-		// wait for node to have all pending transactions
-		while (txs.length > (await countPendingTransactions())) {
-			await queue();
-		}
-		// mine one block
-		await network.provider.send('evm_mine');
-		// fetch receipts
-		const receipts = await Promise.all(promises);
-		// Sanity check, all tx should be in the same block
-		const minedBlocks = new Set(receipts.map((receipt) => receipt.blockNumber));
-		expect(minedBlocks.size).to.equal(1);
-
-		return receipts;
-	} finally {
-		// enable auto-mining
-		await network.provider.send('evm_setAutomine', [true]);
-	}
-}
 
 describe('Shibui', () => {
 	let shibui: Shibui;
 
 	const NAME = 'Shibui';
 	const SYMBOL = '🌊';
-	const TOTAL_SUPPLY = BigNumber.from(10).pow(18).mul(50_000_000);
 
 	beforeEach(async () => {
 		const [, minter] = await ethers.getSigners();
@@ -64,6 +29,7 @@ describe('Shibui', () => {
 		await shibui.deployed();
 
 		await shibui.mintFull(minter.address);
+		expect(await shibui.balanceOf(minter.address)).to.eql(TOTAL_SUPPLY);
 	});
 
 	describe('metadata', () => {

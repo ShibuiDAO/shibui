@@ -2,15 +2,12 @@ import chai, { expect } from 'chai';
 import { solidity } from 'ethereum-waffle';
 import { BigNumber } from 'ethers';
 import { ethers, network } from 'hardhat';
+import { TOTAL_SUPPLY, ZERO_ADDRESS } from '../../constants';
 import type { Shibui, Shibui__factory, VestingShibui, VestingShibui__factory } from '../../typechain';
 
 chai.use(solidity);
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-
 describe('VestingShibui - integration', () => {
-	const TOTAL_SUPPLY = BigNumber.from(10).pow(18).mul(50_000_000);
-
 	let shibui: Shibui;
 	let vesting: VestingShibui;
 
@@ -22,6 +19,7 @@ describe('VestingShibui - integration', () => {
 		await shibui.deployed();
 
 		await shibui.mintFull(minter.address);
+		expect(await shibui.balanceOf(minter.address)).to.eql(TOTAL_SUPPLY);
 
 		const VestingShibuiContract = (await ethers.getContractFactory('VestingShibui')) as VestingShibui__factory;
 		vesting = await VestingShibuiContract.deploy(shibui.address, a1.address);
