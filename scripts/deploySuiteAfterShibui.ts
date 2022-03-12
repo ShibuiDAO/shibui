@@ -23,16 +23,19 @@ import {
 import type {
 	GovernorCharlie,
 	GovernorCharlie__factory,
-	Shibui__factory,
+	Shibui,
 	Timelock__factory,
 	TokenManager__factory,
 	VestingShibui__factory
 } from '../typechain';
 
+const SHIBUI_ADDRESS = '';
+
 const NOW = new Date();
 const VEST_END_TIMESTAMP = BigNumber.from(NOW.getTime()).add(BigNumber.from(WEEK_IN_SECONDS).mul(4).mul(6));
 
 async function main() {
+	assert.notEqual(SHIBUI_ADDRESS, '');
 	assert.notEqual(F1_ADDRESS, '');
 	assert.notEqual(C1_ADDRESS, '');
 	assert.notEqual(A1_ADDRESS, '');
@@ -54,12 +57,7 @@ async function main() {
 	const spinner = ora('Deploying contracts').start();
 	const [deployer] = await ethers.getSigners();
 
-	spinner.text = 'Deploying "Shibui" contract';
-	const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
-	const Shibui = await ShibuiContract.deploy();
-	await Shibui.deployed();
-
-	await Shibui.mintFull(deployer.address);
+	const Shibui = (await ethers.getContractAt('Shibui', SHIBUI_ADDRESS)) as Shibui;
 
 	spinner.text = 'Deploying "Timelock" contract';
 	const TimelockContract = (await ethers.getContractFactory('Timelock')) as Timelock__factory;
@@ -88,24 +86,27 @@ async function main() {
 	spinner.text = 'Deploying "VestingShibui" contract for "F1"';
 	const F1_VestingShibui = await VestingShibuiContract.deploy(Shibui.address, F1_ADDRESS);
 	await F1_VestingShibui.deployed();
-	spinner.text = 'Transferring Shibui tokens to "VestingShibui" for "F1"';
-	await Shibui.transfer(F1_VestingShibui.address, F_DISTRIBUTION);
+	spinner.text = 'Minting Shibui tokens to "VestingShibui" for "F1"';
+	// 50mil -> 40mil
+	await Shibui.mintAmount(F1_VestingShibui.address, F_DISTRIBUTION);
 	spinner.text = 'Starting vesting for "F1"';
 	await F1_VestingShibui.vest(VEST_END_TIMESTAMP);
 
 	spinner.text = 'Deploying "VestingShibui" contract for "C1"';
 	const C1_VestingShibui = await VestingShibuiContract.deploy(Shibui.address, C1_ADDRESS);
 	await C1_VestingShibui.deployed();
-	spinner.text = 'Transferring Shibui tokens to "VestingShibui" for "C1"';
-	await Shibui.transfer(C1_VestingShibui.address, C_DISTRIBUTION);
+	spinner.text = 'Minting Shibui tokens to "VestingShibui" for "C1"';
+	// 40mil -> 39.5mil
+	await Shibui.mintAmount(C1_VestingShibui.address, C_DISTRIBUTION);
 	spinner.text = 'Starting vesting for "C1"';
 	await C1_VestingShibui.vest(VEST_END_TIMESTAMP);
 
 	spinner.text = 'Deploying "VestingShibui" contract for "A1"';
 	const A1_VestingShibui = await VestingShibuiContract.deploy(Shibui.address, A1_ADDRESS);
 	await A1_VestingShibui.deployed();
-	spinner.text = 'Transferring Shibui tokens to "VestingShibui" for "A1"';
-	await Shibui.transfer(A1_VestingShibui.address, A_DISTRIBUTION);
+	spinner.text = 'Minting Shibui tokens to "VestingShibui" for "A1"';
+	// 39.5mil -> 37.5mil
+	await Shibui.mintAmount(A1_VestingShibui.address, A_DISTRIBUTION);
 	spinner.text = 'Starting vesting for "A1"';
 	await A1_VestingShibui.vest(VEST_END_TIMESTAMP);
 
@@ -113,17 +114,20 @@ async function main() {
 	const A2_VestingShibui = await VestingShibuiContract.deploy(Shibui.address, A2_ADDRESS);
 	await A2_VestingShibui.deployed();
 	spinner.text = 'Transferring Shibui tokens to "VestingShibui" for "A2"';
-	await Shibui.transfer(A2_VestingShibui.address, A_DISTRIBUTION);
+	// 37.5mil -> 35.5mil
+	await Shibui.mintAmount(A2_VestingShibui.address, A_DISTRIBUTION);
 	spinner.text = 'Starting vesting for "A2"';
 	await A2_VestingShibui.vest(VEST_END_TIMESTAMP);
 
 	spinner.text = 'Locking "Boba DAO" from transferring Shibui tokens';
 	await Shibui.lockHolder(BOBA_DAO_ADDRESS);
-	spinner.text = 'Transferring Shibui tokens to "Boba DAO"';
-	await Shibui.transfer(BOBA_DAO_ADDRESS, BOBA_DAO_DISTRIBUTION);
+	spinner.text = 'Minting Shibui tokens to "Boba DAO"';
+	// 35.5mil -> 33mil
+	await Shibui.mintAmount(BOBA_DAO_ADDRESS, BOBA_DAO_DISTRIBUTION);
 
 	spinner.text = 'Transferring Shibui tokens to "TokenManager" for "ShibuiDAO Treasury"';
-	await Shibui.transfer(TokenManager.address, TREASURY_DISTRIBUTION);
+	// 33mil -> 13mil
+	await Shibui.mintAmount(TokenManager.address, TREASURY_DISTRIBUTION);
 
 	spinner.text = 'Transferring ownership of internal contract instances to ShibuiDAO Governance "Timelock"';
 	await Shibui.transferOwnership(Timelock.address);
@@ -146,7 +150,7 @@ async function main() {
 	console.log(
 		[
 			'',
-			` - "Shibui" deployed to ${Shibui.address}`,
+			` - "Shibui" accessed from ${SHIBUI_ADDRESS}`,
 			` - "Timelock" deployed to ${Timelock.address}`,
 			` - "TokenManager" deployed to ${TokenManager.address}`,
 			` - "GovernorCharlie" deployed to ${GovernorCharlie.address}`,
