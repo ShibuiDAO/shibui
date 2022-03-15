@@ -13,6 +13,7 @@ import {
 	DAY_IN_SECONDS,
 	F1_ADDRESS,
 	F_DISTRIBUTION,
+	OOLONG_PAIR_CREATION_DISTRIBUTION,
 	PROPOSAL_THRESHOLD,
 	TOTAL_SUPPLY,
 	TREASURY_DISTRIBUTION,
@@ -29,11 +30,12 @@ import type {
 	VestingShibui__factory
 } from '../typechain';
 
-const SHIBUI_ADDRESS = '';
+const SHIBUI_ADDRESS = '0xF08AD7C3f6b1c6843ba027AD54Ed8DDB6D71169b';
 
 const NOW = new Date();
 const VEST_END_TIMESTAMP = BigNumber.from(NOW.getTime()).add(BigNumber.from(WEEK_IN_SECONDS).mul(4).mul(6));
 
+// The distribution already accounts for the LP pair creation distribution.
 async function main() {
 	assert.notEqual(SHIBUI_ADDRESS, '');
 	assert.notEqual(F1_ADDRESS, '');
@@ -50,6 +52,7 @@ async function main() {
 			.add(BigNumber.from(A_DISTRIBUTION).mul(2))
 			.add(BOBA_DAO_DISTRIBUTION)
 			.add(TREASURY_DISTRIBUTION)
+			.add(OOLONG_PAIR_CREATION_DISTRIBUTION)
 			.toBigInt() <= TOTAL_SUPPLY.toBigInt(),
 		true
 	);

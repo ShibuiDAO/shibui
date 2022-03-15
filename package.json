@@ -11,7 +11,10 @@
 		"compile:hardhat": "hardhat compile",
 		"test:hardhat": "hardhat test --network hardhat",
 		"test:hardhat:coverage": "hardhat coverage --network hardhat",
-		"deploy:shibui:frame": "hardhat run ./scripts/deployShibui.ts --network frame"
+		"script:complete:frame": "hardhat run ./scripts/deployComplete.ts --network frame",
+		"script:shibui:frame": "hardhat run ./scripts/deployShibui.ts --network frame",
+		"script:suite:frame": "hardhat run ./scripts/deploySuiteAfterShibui.ts --network frame",
+		"script:oolong:frame": "hardhat run ./scripts/distributeOolongPairCreation.ts --network frame"
 	},
 	"files": [],
 	"dependencies": {

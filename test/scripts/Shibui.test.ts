@@ -7,7 +7,7 @@ import type { Shibui__factory } from '../../typechain';
 chai.use(solidity);
 
 describe('Deploy - "Shibui"', () => {
-	it('should deploy', async () => {
+	it('should execute', async () => {
 		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
 		const Shibui = await ShibuiContract.deploy();
 		await Shibui.deployed();

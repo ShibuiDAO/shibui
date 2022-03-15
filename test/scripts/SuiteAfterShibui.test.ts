@@ -18,6 +18,7 @@ import {
 import type {
 	GovernorCharlie,
 	GovernorCharlie__factory,
+	Shibui,
 	Shibui__factory,
 	Timelock__factory,
 	TokenManager__factory,
@@ -26,7 +27,7 @@ import type {
 
 chai.use(solidity);
 
-describe('Deploy - "Complete"', () => {
+describe('Deploy - "SuiteAfterShibui"', () => {
 	let NOW: Date;
 	let VEST_END_TIMESTAMP: BigNumber;
 
@@ -35,14 +36,18 @@ describe('Deploy - "Complete"', () => {
 		VEST_END_TIMESTAMP = BigNumber.from(NOW.getTime()).add(BigNumber.from(WEEK_IN_SECONDS).mul(4).mul(6));
 	});
 
-	it('should deploy', async () => {
+	it('should execute', async () => {
 		const [deployer, F1, C1, A1, A2, BOBA_DAO] = await ethers.getSigners();
 
-		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
-		const Shibui = await ShibuiContract.deploy();
-		await Shibui.deployed();
+		// PREP PRE SCRIPT STATE
 
-		await Shibui.mintFull(deployer.address);
+		const ShibuiContract = (await ethers.getContractFactory('Shibui')) as Shibui__factory;
+		const _Shibui = await ShibuiContract.deploy();
+		await _Shibui.deployed();
+
+		// SCRIPT LOGIC
+
+		const Shibui = (await ethers.getContractAt('Shibui', _Shibui.address)) as Shibui;
 
 		const TimelockContract = (await ethers.getContractFactory('Timelock')) as Timelock__factory;
 		const Timelock = await TimelockContract.deploy(DAY_IN_SECONDS);
@@ -67,28 +72,34 @@ describe('Deploy - "Complete"', () => {
 
 		const F1_VestingShibui = await VestingShibuiContract.deploy(Shibui.address, F1.address);
 		await F1_VestingShibui.deployed();
-		await Shibui.transfer(F1_VestingShibui.address, F_DISTRIBUTION);
+		// 50mil -> 40mil
+		await Shibui.mintAmount(F1_VestingShibui.address, F_DISTRIBUTION);
 		await F1_VestingShibui.vest(VEST_END_TIMESTAMP);
 
 		const C1_VestingShibui = await VestingShibuiContract.deploy(Shibui.address, C1.address);
 		await C1_VestingShibui.deployed();
-		await Shibui.transfer(C1_VestingShibui.address, C_DISTRIBUTION);
+		// 40mil -> 39.5mil
+		await Shibui.mintAmount(C1_VestingShibui.address, C_DISTRIBUTION);
 		await C1_VestingShibui.vest(VEST_END_TIMESTAMP);
 
 		const A1_VestingShibui = await VestingShibuiContract.deploy(Shibui.address, A1.address);
 		await A1_VestingShibui.deployed();
-		await Shibui.transfer(A1_VestingShibui.address, A_DISTRIBUTION);
+		// 39.5mil -> 37.5mil
+		await Shibui.mintAmount(A1_VestingShibui.address, A_DISTRIBUTION);
 		await A1_VestingShibui.vest(VEST_END_TIMESTAMP);
 
 		const A2_VestingShibui = await VestingShibuiContract.deploy(Shibui.address, A2.address);
 		await A2_VestingShibui.deployed();
-		await Shibui.transfer(A2_VestingShibui.address, A_DISTRIBUTION);
+		// 37.5mil -> 35.5mil
+		await Shibui.mintAmount(A2_VestingShibui.address, A_DISTRIBUTION);
 		await A2_VestingShibui.vest(VEST_END_TIMESTAMP);
 
 		await Shibui.lockHolder(BOBA_DAO.address);
-		await Shibui.transfer(BOBA_DAO.address, BOBA_DAO_DISTRIBUTION);
+		// 35.5mil -> 33mil
+		await Shibui.mintAmount(BOBA_DAO.address, BOBA_DAO_DISTRIBUTION);
 
-		await Shibui.transfer(TokenManager.address, TREASURY_DISTRIBUTION);
+		// 33mil -> 13mil
+		await Shibui.mintAmount(TokenManager.address, TREASURY_DISTRIBUTION);
 
 		await Shibui.transferOwnership(Timelock.address);
 		await TokenManager.transferOwnership(Timelock.address);

@@ -32,6 +32,7 @@ import type {
 const NOW = new Date();
 const VEST_END_TIMESTAMP = BigNumber.from(NOW.getTime()).add(BigNumber.from(WEEK_IN_SECONDS).mul(4).mul(6));
 
+// The deploy flow here is technically obsolete due to the deploy flow getting fragmented.
 async function main() {
 	assert.notEqual(F1_ADDRESS, '');
 	assert.notEqual(C1_ADDRESS, '');
