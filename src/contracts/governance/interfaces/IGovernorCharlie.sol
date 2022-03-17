@@ -11,8 +11,11 @@ interface IGovernorCharlie {
 	/// @notice An event emitted when the voting delay is set.
 	event VotingDelaySet(uint256 oldVotingDelay, uint256 newVotingDelay);
 
-	/// @notice Emitted when proposal threshold is set.
+	/// @notice Emitted when the proposal threshold is set.
 	event ProposalThresholdSet(uint256 oldProposalThreshold, uint256 newProposalThreshold);
+
+	/// @notice Emitted when the required amount of quorum votes is set.
+	event QuorumVotesSet(uint256 oldQuorumVotes, uint256 newQuorumVotes);
 
 	/// @notice An event emitted when a new proposal is created.
 	event ProposalCreated(
@@ -22,7 +25,7 @@ interface IGovernorCharlie {
 		uint256[] values,
 		string[] signatures,
 		bytes[] calldatas,
-        uint256 timestamp,
+		uint256 timestamp,
 		uint256 startBlock,
 		uint256 endTimestamp,
 		string description
@@ -65,20 +68,12 @@ interface IGovernorCharlie {
 		address proposer;
 		/// @notice The timestamp that the proposal will be available for execution, set once the vote succeeds.
 		uint256 eta;
-		/// @notice the ordered list of target addresses for calls to be made.
-		address[] targets;
-		/// @notice The ordered list of values (i.e. msg.value) to be passed to the calls to be made.
-		uint256[] values;
-		/// @notice The ordered list of function signatures to be called.
-		string[] signatures;
-		/// @notice The ordered list of calldata to be passed to each call.
-		bytes[] calldatas;
-        /// @notice Timestamp of when the proposal was created.
-        uint256 timestamp;
+		/// @notice Timestamp of when the proposal was created.
+		uint256 timestamp;
 		/// @notice The block at which voting begins: holders must delegate their votes prior to this block.
 		uint256 startBlock;
 		/// @notice The block at which voting ends: votes must be cast prior to this block.
-        /// @dev Is counted from `timestamp` and not `startBlock` so the proposer should take that into account.
+		/// @dev Is counted from `timestamp` and not `startBlock` so the proposer should take that into account.
 		uint256 endTimestamp;
 		/// @notice Current number of votes in favor of this proposal.
 		uint256 forVotes;
@@ -90,6 +85,14 @@ interface IGovernorCharlie {
 		bool canceled;
 		/// @notice Flag marking whether the proposal has been executed.
 		bool executed;
+		/// @notice the ordered list of target addresses for calls to be made.
+		address[] targets;
+		/// @notice The ordered list of values (i.e. msg.value) to be passed to the calls to be made.
+		uint256[] values;
+		/// @notice The ordered list of function signatures to be called.
+		string[] signatures;
+		/// @notice The ordered list of calldata to be passed to each call.
+		bytes[] calldatas;
 		/// @notice Receipts of ballots for the entire set of voters.
 		mapping(address => Receipt) receipts;
 	}

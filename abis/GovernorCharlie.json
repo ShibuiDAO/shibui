@@ -196,6 +196,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "oldQuorumVotes",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newQuorumVotes",
+        "type": "uint256"
+      }
+    ],
+    "name": "QuorumVotesSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "voter",
@@ -282,6 +301,19 @@
   },
   {
     "inputs": [],
+    "name": "MAX_QUORUM_VOTES",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "MAX_VOTING_DELAY",
     "outputs": [
       {
@@ -321,6 +353,19 @@
   },
   {
     "inputs": [],
+    "name": "MIN_QUORUM_VOTES",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "MIN_VOTING_DELAY",
     "outputs": [
       {
@@ -348,19 +393,6 @@
   {
     "inputs": [],
     "name": "PROPOSAL_MAX_OPERATIONS",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "QUORUM_VOTES",
     "outputs": [
       {
         "internalType": "uint256",
@@ -933,6 +965,19 @@
   },
   {
     "inputs": [],
+    "name": "quorumVotes",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -986,6 +1031,19 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "_newQuorumVotes",
+        "type": "uint256"
+      }
+    ],
+    "name": "setQuorumVotes",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "_newVotingDelay",
         "type": "uint256"
       }
@@ -1006,19 +1064,6 @@
     "name": "setVotingPeriod",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "shibui",
-    "outputs": [
-      {
-        "internalType": "contract IShibui",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

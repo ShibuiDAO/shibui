@@ -29,14 +29,17 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 	///                                EIP712 CONSTANTS                                ///
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	/// @notice The EIP-712 typehash for casting a ballot with no reason.
 	bytes32 public constant _BALLOT_TYPEHASH = keccak256("Ballot(uint256 proposalId,uint8 support)");
 
+	/// @notice The EIP-712 typehash for casting a ballot with a reason.
 	bytes32 public constant _BALLOT_REASON_TYPEHASH = keccak256("Ballot(uint256 proposalId,uint8 support,string reason)");
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///                                  CONTRACT METADATA                                  ///
 	///////////////////////////////////////////////////////////////////////////////////////////
 
+	/// @notice A "display name" on block explorers.
 	// solhint-disable-next-line const-name-snakecase
 	string public constant name = "Shibui Governor Charlie";
 
@@ -65,9 +68,13 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 	/// @dev 1,000,000 Shibui;
 	uint256 public constant MAX_PROPOSAL_THRESHOLD = 1_000_000e18;
 
-	/// @notice The number of votes in support of a proposal required in order for a quorum to be reached and for a vote to succeed.
-	/// @dev 2,500,000 = 5% of Shibui.
-	uint256 public constant QUORUM_VOTES = 2_500_000e18;
+	/// @notice The minimum setable quorum threshold.
+	/// @dev 500,000 = 0.5% of Shibui.
+	uint256 public constant MIN_QUORUM_VOTES = 500_000e18;
+
+	/// @notice The maximum setable quorum threshold.
+	/// @dev 5,000,000 = 10% of Shibui.
+	uint256 public constant MAX_QUORUM_VOTES = 5_000_000e18;
 
 	/// @notice The maximum number of actions that can be included in a proposal
 	/// @dev 10 actions.
@@ -77,9 +84,11 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 	///                                    GOVERNOR PERIPHERY                                    ///
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	ITimelock public timelock;
+	/// @dev The address and interface of the core token contract.
+	IShibui private shibui;
 
-	IShibui public shibui;
+	/// @notice The address and interface of the initial timelock contract.
+	ITimelock public timelock;
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///                                                          GOVERNANCE PROCESS PARAMETERS                                                          ///
@@ -93,6 +102,10 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 
 	/// @notice The number of votes required in order for a voter to become a proposer.
 	uint256 public proposalThreshold;
+
+	/// @notice The number of votes in support of a proposal required in order for a quorum to be reached and for a vote to succeed.
+	/// @dev Default is set (in the initializer function) to: 2,500,000 = 5% of Shibui.
+	uint256 public quorumVotes;
 
 	/// @notice Initial proposal id set at "initiateGovernance".
 	uint256 public initialProposalId;
@@ -163,6 +176,10 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 		votingPeriod = _votingPeriod;
 		votingDelay = _votingDelay;
 		proposalThreshold = _proposalThreshold;
+
+		quorumVotes = 2_500_000e18;
+
+		emit QuorumVotesSet(quorumVotes, quorumVotes);
 	}
 
 	function govern(uint256 _initialId) external onlyOwner {
@@ -352,7 +369,7 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 			// solhint-disable-next-line not-rely-on-time
 		} else if (block.timestamp <= proposal.endTimestamp) {
 			return ProposalState.Active;
-		} else if (proposal.forVotes <= proposal.againstVotes || proposal.forVotes < QUORUM_VOTES) {
+		} else if (proposal.forVotes <= proposal.againstVotes || proposal.forVotes < quorumVotes) {
 			return ProposalState.Defeated;
 		} else if (proposal.eta == 0) {
 			return ProposalState.Succeeded;
@@ -487,6 +504,14 @@ contract GovernorCharlie is Initializable, ContextUpgradeable, OwnableUpgradeabl
 		proposalThreshold = _newProposalThreshold;
 
 		emit ProposalThresholdSet(oldProposalThreshold, proposalThreshold);
+	}
+
+	function setQuorumVotes(uint256 _newQuorumVotes) external onlyOwner {
+		require(_newQuorumVotes >= MIN_QUORUM_VOTES && _newQuorumVotes <= MAX_QUORUM_VOTES, "QUORUM_VOTES_INVALID");
+		uint256 oldQuorumVotes = quorumVotes;
+		quorumVotes = _newQuorumVotes;
+
+		emit QuorumVotesSet(oldQuorumVotes, quorumVotes);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
