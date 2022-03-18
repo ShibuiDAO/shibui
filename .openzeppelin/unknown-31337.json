@@ -54,7 +54,7 @@
   "impls": {
     "b9179529bb8639f8fc8aa2e581c97698ee9b0d1e4b906a70e3980dafb24bfbaf": {
       "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xa04d4de19b4777b031bf541a163bf8fd2e36c25264273af4d8826d70e7b56bb1",
+      "txHash": "0x04f0fdce57b2ccd14eed39264c0e330f9d4d446ee7c98b7420ba65a0b3f27eea",
       "layout": {
         "storage": [
           {
@@ -125,17 +125,17 @@
             "label": "shibui",
             "offset": 0,
             "slot": "153",
-            "type": "t_contract(IShibui)9506",
+            "type": "t_contract(IShibui)9508",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:85"
+            "src": "src/contracts/governance/GovernorCharlie.sol:88"
           },
           {
             "label": "timelock",
             "offset": 0,
             "slot": "154",
-            "type": "t_contract(ITimelock)8554",
+            "type": "t_contract(ITimelock)8556",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:87"
+            "src": "src/contracts/governance/GovernorCharlie.sol:91"
           },
           {
             "label": "votingPeriod",
@@ -143,7 +143,7 @@
             "slot": "155",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:94"
+            "src": "src/contracts/governance/GovernorCharlie.sol:98"
           },
           {
             "label": "votingDelay",
@@ -151,7 +151,7 @@
             "slot": "156",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:97"
+            "src": "src/contracts/governance/GovernorCharlie.sol:101"
           },
           {
             "label": "proposalThreshold",
@@ -159,7 +159,7 @@
             "slot": "157",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:100"
+            "src": "src/contracts/governance/GovernorCharlie.sol:104"
           },
           {
             "label": "quorumVotes",
@@ -167,7 +167,7 @@
             "slot": "158",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:104"
+            "src": "src/contracts/governance/GovernorCharlie.sol:108"
           },
           {
             "label": "initialProposalId",
@@ -175,7 +175,7 @@
             "slot": "159",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:107"
+            "src": "src/contracts/governance/GovernorCharlie.sol:111"
           },
           {
             "label": "proposalCount",
@@ -183,15 +183,15 @@
             "slot": "160",
             "type": "t_uint256",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:114"
+            "src": "src/contracts/governance/GovernorCharlie.sol:118"
           },
           {
             "label": "proposals",
             "offset": 0,
             "slot": "161",
-            "type": "t_mapping(t_uint256,t_struct(Proposal)8398_storage)",
+            "type": "t_mapping(t_uint256,t_struct(Proposal)8400_storage)",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:117"
+            "src": "src/contracts/governance/GovernorCharlie.sol:121"
           },
           {
             "label": "latestProposalIds",
@@ -199,7 +199,7 @@
             "slot": "162",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:120"
+            "src": "src/contracts/governance/GovernorCharlie.sol:124"
           },
           {
             "label": "allowlistGuardian",
@@ -207,7 +207,7 @@
             "slot": "163",
             "type": "t_address",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:127"
+            "src": "src/contracts/governance/GovernorCharlie.sol:131"
           },
           {
             "label": "allowlistAccountExpirations",
@@ -215,7 +215,7 @@
             "slot": "164",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "GovernorCharlie",
-            "src": "src/contracts/governance/GovernorCharlie.sol:130"
+            "src": "src/contracts/governance/GovernorCharlie.sol:134"
           }
         ],
         "types": {
@@ -249,25 +249,25 @@
           "t_bytes_storage": {
             "label": "bytes"
           },
-          "t_contract(IShibui)9506": {
+          "t_contract(IShibui)9508": {
             "label": "contract IShibui"
           },
-          "t_contract(ITimelock)8554": {
+          "t_contract(ITimelock)8556": {
             "label": "contract ITimelock"
           },
-          "t_mapping(t_address,t_struct(Receipt)8342_storage)": {
+          "t_mapping(t_address,t_struct(Receipt)8344_storage)": {
             "label": "mapping(address => struct IGovernorCharlie.Receipt)"
           },
           "t_mapping(t_address,t_uint256)": {
             "label": "mapping(address => uint256)"
           },
-          "t_mapping(t_uint256,t_struct(Proposal)8398_storage)": {
+          "t_mapping(t_uint256,t_struct(Proposal)8400_storage)": {
             "label": "mapping(uint256 => struct IGovernorCharlie.Proposal)"
           },
           "t_string_storage": {
             "label": "string"
           },
-          "t_struct(Proposal)8398_storage": {
+          "t_struct(Proposal)8400_storage": {
             "label": "struct IGovernorCharlie.Proposal",
             "members": [
               {
@@ -332,11 +332,11 @@
               },
               {
                 "label": "receipts",
-                "type": "t_mapping(t_address,t_struct(Receipt)8342_storage)"
+                "type": "t_mapping(t_address,t_struct(Receipt)8344_storage)"
               }
             ]
           },
-          "t_struct(Receipt)8342_storage": {
+          "t_struct(Receipt)8344_storage": {
             "label": "struct IGovernorCharlie.Receipt",
             "members": [
               {
