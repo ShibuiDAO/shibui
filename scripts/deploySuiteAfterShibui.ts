@@ -13,6 +13,7 @@ import {
 	DAY_IN_SECONDS,
 	F1_ADDRESS,
 	F_DISTRIBUTION,
+	BOBA_MAINNET_SHIBUI_ADDRESS,
 	OOLONG_PAIR_CREATION_DISTRIBUTION,
 	PROPOSAL_THRESHOLD,
 	TOTAL_SUPPLY,
@@ -30,14 +31,12 @@ import type {
 	VestingShibui__factory
 } from '../typechain';
 
-const SHIBUI_ADDRESS = '0xF08AD7C3f6b1c6843ba027AD54Ed8DDB6D71169b';
-
 const NOW = new Date();
 const VEST_END_TIMESTAMP = BigNumber.from(NOW.getTime()).add(BigNumber.from(WEEK_IN_SECONDS).mul(4).mul(6));
 
 // The distribution already accounts for the LP pair creation distribution.
 async function main() {
-	assert.notEqual(SHIBUI_ADDRESS, '');
+	assert.notEqual(BOBA_MAINNET_SHIBUI_ADDRESS, '');
 	assert.notEqual(F1_ADDRESS, '');
 	assert.notEqual(C1_ADDRESS, '');
 	assert.notEqual(A1_ADDRESS, '');
@@ -60,7 +59,7 @@ async function main() {
 	const spinner = ora('Deploying contracts').start();
 	const [deployer] = await ethers.getSigners();
 
-	const Shibui = (await ethers.getContractAt('Shibui', SHIBUI_ADDRESS)) as Shibui;
+	const Shibui = (await ethers.getContractAt('Shibui', BOBA_MAINNET_SHIBUI_ADDRESS)) as Shibui;
 
 	spinner.text = 'Deploying "Timelock" contract';
 	const TimelockContract = (await ethers.getContractFactory('Timelock')) as Timelock__factory;
@@ -153,7 +152,7 @@ async function main() {
 	console.log(
 		[
 			'',
-			` - "Shibui" accessed from ${SHIBUI_ADDRESS}`,
+			` - "Shibui" accessed from ${BOBA_MAINNET_SHIBUI_ADDRESS}`,
 			` - "Timelock" deployed to ${Timelock.address}`,
 			` - "TokenManager" deployed to ${TokenManager.address}`,
 			` - "GovernorCharlie" deployed to ${GovernorCharlie.address}`,

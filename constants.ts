@@ -26,3 +26,5 @@ export const OOLONG_PAIR_CREATION_DISTRIBUTION = BigNumber.from(DECIMALS).mul(40
 export const VOTING_PERIOD = BigNumber.from(DAY_IN_SECONDS);
 export const VOTING_DELAY = BigNumber.from(1);
 export const PROPOSAL_THRESHOLD = BigNumber.from(DECIMALS).mul(1_000_000);
+
+export const BOBA_MAINNET_SHIBUI_ADDRESS = '0xF08AD7C3f6b1c6843ba027AD54Ed8DDB6D71169b';
