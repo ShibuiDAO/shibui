@@ -22,6 +22,7 @@ export const BOBA_DAO_DISTRIBUTION = BigNumber.from(DECIMALS).mul(2_500_000);
 export const TREASURY_DISTRIBUTION = BigNumber.from(DECIMALS).mul(20_000_000);
 
 export const OOLONG_PAIR_CREATION_DISTRIBUTION = BigNumber.from(DECIMALS).mul(400);
+export const OOLONG_LIQUIDITY_EXPANSION_DISTRIBUTION = BigNumber.from(DECIMALS).mul(800);
 
 export const VOTING_PERIOD = BigNumber.from(DAY_IN_SECONDS);
 export const VOTING_DELAY = BigNumber.from(1);

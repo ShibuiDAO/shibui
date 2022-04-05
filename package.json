@@ -16,7 +16,8 @@
 		"script:suite:frame": "hardhat run ./scripts/deploySuiteAfterShibui.ts --network frame",
 		"script:oolong:frame": "hardhat run ./scripts/distributeOolongPairCreation.ts --network frame",
 		"script:vesting:frame": "hardhat run ./scripts/deployVesting.ts --network frame",
-		"script:bobadao:frame": "hardhat run ./scripts/distributeBobaDAO.ts --network frame"
+		"script:bobadao:frame": "hardhat run ./scripts/distributeBobaDAO.ts --network frame",
+		"script:oolong_expansion:frame": "hardhat run ./scripts/distributeOolongLiquidityExpansion.ts --network frame"
 	},
 	"files": [],
 	"dependencies": {
