@@ -10,6 +10,7 @@ export const C1_ADDRESS = '0x147439cBFb58fbb13a3149BCd9159d21fbD9F799';
 export const A1_ADDRESS = '0x25a98B269F4200A53fA8352d64f5115bb1Ef05eb';
 export const A2_ADDRESS = '0xDF10742993eC99c895B2166267eAA4ce864209A8';
 export const BOBA_DAO_ADDRESS = '0x2CC555B5B1a4Cf7fA5401B29ab46fc5ba2e205b0';
+export const BOBA_BREWERY_IDO_ADDRESS = '0x1c6c6eB5942f99400Da8e8b3A7540038f02C81Ec';
 
 export const DECIMALS = BigNumber.from(10).pow(18);
 
@@ -23,6 +24,8 @@ export const TREASURY_DISTRIBUTION = BigNumber.from(DECIMALS).mul(20_000_000);
 
 export const OOLONG_PAIR_CREATION_DISTRIBUTION = BigNumber.from(DECIMALS).mul(400);
 export const OOLONG_LIQUIDITY_EXPANSION_DISTRIBUTION = BigNumber.from(DECIMALS).mul(800);
+
+export const BOBA_BREWERY_IDO_DISTRIBUTION = BigNumber.from(DECIMALS).mul(2_300_000);
 
 export const VOTING_PERIOD = BigNumber.from(DAY_IN_SECONDS);
 export const VOTING_DELAY = BigNumber.from(1);

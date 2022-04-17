@@ -18,5 +18,5 @@ interface IHolderMerkleDistributor {
 		address account,
 		uint256 amount,
 		bytes32[] calldata merkleProof
-	)
+	) external;
 }
