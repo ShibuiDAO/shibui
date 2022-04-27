@@ -19,7 +19,8 @@
 		"script:bobadao:frame": "hardhat run ./scripts/distributeBobaDAO.ts --network frame",
 		"script:oolong_expansion:frame": "hardhat run ./scripts/distributeOolongLiquidityExpansion.ts --network frame",
 		"script:bobabrewery:frame": "hardhat run ./scripts/distributeBobaBreweryIDO.ts --network frame",
-		"script:bre_lockout:frame": "hardhat run ./scripts/lockBREBuyback.ts --network frame"
+		"script:bre_lockout:frame": "hardhat run ./scripts/lockBREBuyback.ts --network frame",
+		"script:bre_release:frame": "hardhat run ./scripts/unlockBRE.ts --network frame"
 	},
 	"files": [],
 	"dependencies": {
