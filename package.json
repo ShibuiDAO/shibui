@@ -1,14 +1,17 @@
 {
-	"name": "shibui",
+	"name": "@shibuidao/shibui",
 	"version": "1.0.0",
 	"author": "quantumlyy",
 	"license": "MIT",
 	"private": false,
+	"types": "typechain/index.ts",
+	"main": "typechain/index.ts",
 	"scripts": {
 		"clean": "rimraf .shibui abis artifacts cache docs out",
 		"precompile": "yarn clean",
 		"compile": "yarn compile:hardhat",
 		"compile:hardhat": "hardhat compile",
+		"typechain": "yarn compile",
 		"test:hardhat": "hardhat test --network hardhat",
 		"test:hardhat:coverage": "hardhat coverage --network hardhat",
 		"script:complete:frame": "hardhat run ./scripts/deployComplete.ts --network frame",
@@ -20,9 +23,13 @@
 		"script:oolong_expansion:frame": "hardhat run ./scripts/distributeOolongLiquidityExpansion.ts --network frame",
 		"script:bobabrewery:frame": "hardhat run ./scripts/distributeBobaBreweryIDO.ts --network frame",
 		"script:bre_lockout:frame": "hardhat run ./scripts/lockBREBuyback.ts --network frame",
-		"script:bre_release:frame": "hardhat run ./scripts/unlockBRE.ts --network frame"
+		"script:bre_release:frame": "hardhat run ./scripts/unlockBRE.ts --network frame",
+		"sversion": "standard-version"
 	},
-	"files": [],
+	"files": [
+		"typechain",
+		"abis"
+	],
 	"dependencies": {
 		"ethers": "^5.5.4"
 	},
@@ -62,6 +69,7 @@
 		"rimraf": "^3.0.2",
 		"solhint-plugin-prettier": "^0.0.5",
 		"solidity-coverage": "^0.7.20",
+		"standard-version": "^9.3.2",
 		"ts-node": "^10.7.0",
 		"typechain": "^7.0.1",
 		"typescript": "^4.6.2",
