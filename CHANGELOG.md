@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/ShibuiDAO/shibui/compare/v1.1.0...v1.1.1) (2022-05-03)
+
+
+### Bug Fixes
+
+* temporarily remove l1 executor ([d8823dd](https://github.com/ShibuiDAO/shibui/commit/d8823dd415c37df1004254c2b6f1ef36a966fa43))
+
 ## 1.1.0 (2022-05-03)
 
 
