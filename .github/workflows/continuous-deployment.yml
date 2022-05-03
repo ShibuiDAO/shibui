@@ -45,12 +45,9 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Generate Typechain types and ABIs
         run: |
-          if ! yarn typechain; then
-            echo "Most likely worked"
-          fi
+          yarn typechain
         env:
           COINMARKETCAP_API: ${{ secrets.COINMARKETCAP_API }}
-          ALCHEMY_RINKEBY_ETH_KEY: ${{ secrets.ALCHEMY_RINKEBY_ETH_KEY }}
           TESTNET_PRIVATE_KEY: ${{ secrets.TESTNET_PRIVATE_KEY }}
       - name: Upload typescript bundle to artifacts
         uses: actions/upload-artifact@v2
